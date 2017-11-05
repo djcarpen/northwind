@@ -162,6 +162,7 @@ CREATE TABLE H_inventory_transactions (
 CREATE TABLE S_customers (
   customers_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   last_name STRING,
   first_name STRING,
@@ -184,6 +185,7 @@ CREATE TABLE S_customers (
 CREATE TABLE S_employees (
   employees_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   company STRING,
   last_name STRING,
@@ -206,6 +208,7 @@ CREATE TABLE S_employees (
 CREATE TABLE S_shippers (
   shippers_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   last_name STRING,
   first_name STRING,
@@ -228,6 +231,7 @@ CREATE TABLE S_shippers (
 CREATE TABLE S_orders (
   orders_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   tax_status_id INT,
   status_id INT,
@@ -249,6 +253,7 @@ CREATE TABLE S_orders (
 CREATE TABLE S_order_details (
   order_details_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   quantity DECIMAL(18,4),
   unit_price DECIMAL(19,4),
@@ -261,6 +266,7 @@ CREATE TABLE S_order_details (
 CREATE TABLE S_products (
   products_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   product_code STRING,
   description STRING,
@@ -278,6 +284,7 @@ CREATE TABLE S_products (
 CREATE TABLE S_suppliers (
   suppliers_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   last_name STRING,
   first_name STRING,
@@ -300,6 +307,7 @@ CREATE TABLE S_suppliers (
 CREATE TABLE S_purchase_orders (
   purchase_orders_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   submitted_date TIMESTAMP,
   creation_date TIMESTAMP,
@@ -317,6 +325,7 @@ CREATE TABLE S_purchase_orders (
 CREATE TABLE S_purchase_order_details (
   purchase_order_details_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   quantity DECIMAL(18,4),
   unit_cost DECIMAL(19,4),
@@ -326,6 +335,7 @@ CREATE TABLE S_purchase_order_details (
 CREATE TABLE S_inventory_transactions (
   inventory_transactions_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   transaction_type INT,
   transaction_created_date TIMESTAMP,
@@ -337,6 +347,7 @@ CREATE TABLE S_inventory_transactions (
 CREATE TABLE S_invoices (
   invoices_key STRING,
   load_dt TIMESTAMP,
+  modified_dt TIMESTAMP,
   deleted BOOLEAN,
   invoice_date TIMESTAMP,
   due_date TIMESTAMP,
@@ -349,7 +360,8 @@ CREATE TABLE L_employee_privileges (
   link_employee_privileges_key STRING,
   employees_key STRING,
   privileges_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE L_purchase_orders (
@@ -359,7 +371,8 @@ CREATE TABLE L_purchase_orders (
   created_by_employees_key STRING,
   approved_by_employees_key STRING,
   submitted_by_employees_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 
@@ -369,7 +382,8 @@ CREATE TABLE L_orders (
   employees_key STRING,
   customers_key STRING,
   shippers_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE L_order_details (
@@ -379,13 +393,15 @@ CREATE TABLE L_order_details (
   products_key STRING,
   purchase_orders_key STRING,
   inventory_transactions_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC;
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC;
 
 CREATE TABLE L_invoices (
   link_invoices_key STRING,
   invoices_key STRING,
   orders_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE L_purchase_order_details (
@@ -393,5 +409,6 @@ CREATE TABLE L_purchase_order_details (
   purchase_order_details_key STRING,
   purchase_orders_key STRING,
   inventory_transactions_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC;
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC;
   
