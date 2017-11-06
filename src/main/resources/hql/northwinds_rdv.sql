@@ -92,8 +92,7 @@ CREATE TABLE H_customers (
   customers_key STRING,
   customer_id INT ,
   company STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) STORED AS ORC;
 
 CREATE TABLE H_privileges (
   privileges_key STRING,
@@ -168,7 +167,6 @@ CREATE TABLE H_inventory_transactions (
 
 CREATE TABLE S_customers (
   customers_key STRING,
-  load_dt TIMESTAMP,
   load_dt TIMESTAMP,
   mod_dt TIMESTAMP,
   mod_type STRING,
@@ -251,9 +249,9 @@ CREATE TABLE S_shippers (
 CREATE TABLE S_orders (
   orders_key STRING,
   load_dt TIMESTAMP,
-  modified_dt TIMESTAMP,
-  edl_ingest_channel STRING,
-  edl_ingest_time TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
   deleted BOOLEAN,
@@ -271,8 +269,7 @@ CREATE TABLE S_orders (
   taxes DECIMAL(19,4),
   payment_type STRING,
   paid_date TIMESTAMP,
-  notes STRING) STORED AS ORC
-;
+  notes STRING) STORED AS ORC;
 
 CREATE TABLE S_order_details (
   order_details_key STRING,

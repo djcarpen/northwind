@@ -122,9 +122,13 @@ and edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table S_customers
 select
         upper(concat_ws("-",regexp_replace(last_name, '"', ''), regexp_replace(first_name, '"', ''), regexp_replace(company, '"', ''))),
-        current_timestamp,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time,        
         regexp_replace(last_name, '"', ''),
         regexp_replace(first_name, '"', ''),
         regexp_replace(email_address, '"', ''),
@@ -147,9 +151,13 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table S_employees
 select
         upper(regexp_replace(email_address, '"', '')),
-        current_timestamp,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
         regexp_replace(company, '"', ''),
         regexp_replace(last_name, '"', ''),
         regexp_replace(first_name, '"', ''),
@@ -172,9 +180,13 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table S_shippers
 select
         upper(concat_ws("-",regexp_replace(last_name, '"', ''), regexp_replace(first_name, '"', ''), regexp_replace(company, '"', ''))),
-        current_timestamp,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
         regexp_replace(last_name, '"', ''),
         regexp_replace(first_name, '"', ''),
         regexp_replace(email_address, '"', ''),
@@ -197,9 +209,13 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table S_products
 select 
         upper(regexp_replace(product_code, '"', '')),
-        current_timestamp,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
         regexp_replace(product_code, '"', ''),
         regexp_replace(description, '"', ''),
         standard_cost,
@@ -217,9 +233,13 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table S_invoices
 select
         upper(cast(id as string)) invoices_key,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
-        CURRENT_TIMESTAMP() load_dt,
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
         invoice_date,
         due_date,
         tax,
@@ -230,34 +250,42 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
          
 insert into table s_orders
 SELECT
-    upper(cast(id as string)) orders_key,
-    CURRENT_TIMESTAMP() load_dt,
-    unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
-    case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,  
-    tax_status_id,
-    status_id,
-    order_date,
-    shipped_date,
-    trim(regexp_replace(ship_name,'"','')) ship_name,
-    trim(regexp_replace(ship_address,'"','')) ship_address,
-    trim(regexp_replace(ship_city,'"','')) ship_city,
-    trim(regexp_replace(ship_state_province,'"','')) ship_state_province,
-    trim(regexp_replace(ship_zip_postal_code,'"','')) ship_zip_postal_code,
-    trim(regexp_replace(ship_country_region,'"','')) ship_country_region,
-    trim(regexp_replace(shipping_fee,'"','')) shipping_fee,
-    taxes,
-    trim(regexp_replace(payment_type,'"','')) payment_type,
-    paid_date,
-    trim(regexp_replace(notes,'"','')) notes
-FROM stg_northwind_orders
+        upper(cast(id as string)) orders_key,
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
+        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
+        tax_status_id,
+        status_id,
+        order_date,
+        shipped_date,
+        trim(regexp_replace(ship_name,'"','')) ship_name,
+        trim(regexp_replace(ship_address,'"','')) ship_address,
+        trim(regexp_replace(ship_city,'"','')) ship_city,
+        trim(regexp_replace(ship_state_province,'"','')) ship_state_province,
+        trim(regexp_replace(ship_zip_postal_code,'"','')) ship_zip_postal_code,
+        trim(regexp_replace(ship_country_region,'"','')) ship_country_region,
+        trim(regexp_replace(shipping_fee,'"','')) shipping_fee,
+        taxes,
+        trim(regexp_replace(payment_type,'"','')) payment_type,
+        paid_date,
+        trim(regexp_replace(notes,'"','')) notes
+        FROM stg_northwind_orders
 where edl_ingest_time = ${edl_ingest_time||||string}$;
 
 insert into table  S_order_details 
 select
         upper(cast(id as string)) order_details_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
         quantity,
         unit_price,
         discount,
@@ -269,9 +297,13 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table s_purchase_orders
 SELECT
         upper(cast(id as string)) purchase_orders_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
         status_id,
         submitted_date,
         creation_date,
@@ -289,9 +321,13 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table S_purchase_order_details 
 select 
         upper(cast(id as string)) purchase_order_details_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
         quantity,
         unit_cost,
         date_received,
@@ -302,9 +338,13 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table s_suppliers
 SELECT
         upper(concat_ws("-",cast(id as string), trim(regexp_replace(company,'"','')))) suppliers_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time,
         trim(regexp_replace(last_name,'"','')) last_name,
         trim(regexp_replace(first_name,'"','')) first_name,
         trim(regexp_replace(email_address,'"','')) email_address,
@@ -327,9 +367,13 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table s_inventory_transactions
 select 
         upper(cast(id as string)) inventory_transactions_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh'),
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
+        regexp_replace(dtl__capxaction,'"','') mod_type,
+        dtl__capxrowid mod_row_id,
         case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        edl_ingest_channel,
+        edl_ingest_time, 
         transaction_type,
         transaction_created_date,
         transaction_modified_date,
@@ -343,8 +387,7 @@ select distinct
         upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))) link_employee_privileges_key,
         upper(regexp_replace(nvl(e.email_address,''), '"', '')) employees_key,
         upper(regexp_replace(nvl(p.privilege_name,''), '"', '')) privileges_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh')
+        CURRENT_TIMESTAMP() load_dt
 from stg_northwind_employee_privileges ep
 join (select distinct id, email_address from stg_northwind_employees) e on ep.employee_id = e.id
 join (select distinct id, privilege_name from stg_northwind_privileges) p on ep.privilege_id = p.id
@@ -356,8 +399,7 @@ select distinct
         upper(concat_ws("-",regexp_replace(nvl(cast(i.id as string),''), '"', ''), regexp_replace(nvl(cast(i.order_id as string),''), '"', ''))) link_invoices_key,
         upper(nvl(cast(i.id as string),'')) invoices_key,
         upper(nvl(cast(i.order_id as string),'')) orders_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh')
+        CURRENT_TIMESTAMP() load_dt
 from stg_northwind_invoices i
 where edl_ingest_time = ${edl_ingest_time||||string}$
 and not exists (select 1 from l_invoices lo where link_invoices_key = upper(concat_ws("-",regexp_replace(nvl(cast(i.id as string),''), '"', ''), regexp_replace(nvl(cast(i.order_id as string),''), '"', ''))));    
@@ -370,8 +412,7 @@ select distinct
         upper(regexp_replace(nvl(e1.email_address,''), '"', '')) created_by_employees_key,
         upper(regexp_replace(nvl(e2.email_address,''), '"', '')) approved_by_employees_key,
         upper(regexp_replace(nvl(e3.email_address,''), '"', '')) submitted_by_employees_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(po.edl_ingest_time,'yyyy-MM-dd-hh')
+        CURRENT_TIMESTAMP() load_dt
 from stg_northwind_purchase_orders po
 left join stg_northwind_suppliers s on po.supplier_id = s.id
 left join stg_northwind_employees e1 on po.created_by = e1.id
@@ -387,8 +428,7 @@ select distinct
         upper(regexp_replace(nvl(e.email_address,''), '"', '')) employees_key,
         upper(concat_ws("-",regexp_replace(nvl(c.last_name,''), '"', ''), regexp_replace(nvl(c.first_name,''), '"', ''), regexp_replace(nvl(c.company,''), '"', ''))) customers_key,
         upper(concat_ws("-",regexp_replace(nvl(sh.last_name,''), '"', ''), regexp_replace(nvl(sh.first_name,''), '"', ''), regexp_replace(nvl(sh.company,''), '"', ''))) shippers_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(o.edl_ingest_time,'yyyy-MM-dd-hh')
+        CURRENT_TIMESTAMP() load_dt
 from stg_northwind_orders o
 left join stg_northwind_employees e on o.employee_id = e.id
 left join stg_northwind_customers c on o.customer_id = c.id
@@ -404,8 +444,7 @@ select distinct
         upper(regexp_replace(nvl(p.product_code,''), '"', '')) products_key,
         upper(nvl(cast(od.purchase_order_id as string),'')) purchase_orders_key,
         upper(nvl(cast(od.inventory_id as string),'')) inventory_transactions_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(od.edl_ingest_time,'yyyy-MM-dd-hh')
+        CURRENT_TIMESTAMP() load_dt
 from stg_northwind_order_details od
 left join stg_northwind_products p on od.product_id = p.id
 where od.edl_ingest_time = ${edl_ingest_time||||string}$
@@ -417,8 +456,7 @@ select distinct
         upper(nvl(cast(pod.id as string),'')) purchase_order_details_key,
         upper(nvl(cast(pod.purchase_order_id as string),'')) purchase_orders_key,
         upper(nvl(cast(pod.inventory_id as string),'')) inventory_transactions_key,
-        CURRENT_TIMESTAMP() load_dt,
-        unix_timestamp(edl_ingest_time,'yyyy-MM-dd-hh')
+        CURRENT_TIMESTAMP() load_dt
 from stg_northwind_purchase_order_details pod
 where edl_ingest_time = ${edl_ingest_time||||string}$
 and not exists (select 1 from l_purchase_order_details where link_purchase_order_details_key = upper(concat_ws("-",nvl(cast(pod.id as string),''),nvl(cast(pod.purchase_order_id as string),''),nvl(cast(pod.inventory_id as string),''))));
