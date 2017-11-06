@@ -1,4 +1,4 @@
-
+use justin_northwind;
 drop table if exists h_customers;
 drop table if exists h_employees;
 drop table if exists h_inventory_transactions;
@@ -39,31 +39,36 @@ drop table if exists s_suppliers;
 CREATE TABLE R_purchase_order_status (
   purchase_order_status_id INT,
   status STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_inventory_transaction_types (
   inventory_transaction_type_id INT,
   type_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_order_details_status (
   order_details_status_id INT,
   status_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_orders_tax_status (
   order_tax_status_id INT,
   tax_status_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_orders_status (
   order_status_id INT,
   status_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_sales_reports (
@@ -72,13 +77,15 @@ CREATE TABLE R_sales_reports (
   title STRING,
   filter_row_source STRING,
   `default` INT,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_strings (
   string_id INT ,
   string_data STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE H_customers (
