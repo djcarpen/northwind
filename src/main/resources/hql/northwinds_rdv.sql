@@ -39,31 +39,36 @@ drop table if exists s_suppliers;
 CREATE TABLE R_purchase_order_status (
   purchase_order_status_id INT,
   status STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_inventory_transaction_types (
   inventory_transaction_type_id INT,
   type_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_order_details_status (
   order_details_status_id INT,
   status_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_orders_tax_status (
   order_tax_status_id INT,
   tax_status_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_orders_status (
   order_status_id INT,
   status_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_sales_reports (
@@ -72,21 +77,22 @@ CREATE TABLE R_sales_reports (
   title STRING,
   filter_row_source STRING,
   `default` INT,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE R_strings (
   string_id INT ,
   string_data STRING,
-  load_dt TIMESTAMP) STORED AS ORC
+  load_dt TIMESTAMP,
+  modified_dt TIMESTAMP) STORED AS ORC
 ;
 
 CREATE TABLE H_customers (
   customers_key STRING,
   customer_id INT ,
   company STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) STORED AS ORC;
 
 CREATE TABLE H_privileges (
   privileges_key STRING,
@@ -162,6 +168,11 @@ CREATE TABLE H_inventory_transactions (
 CREATE TABLE S_customers (
   customers_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   last_name STRING,
   first_name STRING,
@@ -184,6 +195,11 @@ CREATE TABLE S_customers (
 CREATE TABLE S_employees (
   employees_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   company STRING,
   last_name STRING,
@@ -206,6 +222,11 @@ CREATE TABLE S_employees (
 CREATE TABLE S_shippers (
   shippers_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   last_name STRING,
   first_name STRING,
@@ -228,6 +249,11 @@ CREATE TABLE S_shippers (
 CREATE TABLE S_orders (
   orders_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   tax_status_id INT,
   status_id INT,
@@ -243,12 +269,16 @@ CREATE TABLE S_orders (
   taxes DECIMAL(19,4),
   payment_type STRING,
   paid_date TIMESTAMP,
-  notes STRING) STORED AS ORC
-;
+  notes STRING) STORED AS ORC;
 
 CREATE TABLE S_order_details (
   order_details_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   quantity DECIMAL(18,4),
   unit_price DECIMAL(19,4),
@@ -261,6 +291,11 @@ CREATE TABLE S_order_details (
 CREATE TABLE S_products (
   products_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   product_code STRING,
   description STRING,
@@ -278,6 +313,11 @@ CREATE TABLE S_products (
 CREATE TABLE S_suppliers (
   suppliers_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   last_name STRING,
   first_name STRING,
@@ -300,6 +340,11 @@ CREATE TABLE S_suppliers (
 CREATE TABLE S_purchase_orders (
   purchase_orders_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   submitted_date TIMESTAMP,
   creation_date TIMESTAMP,
@@ -317,6 +362,11 @@ CREATE TABLE S_purchase_orders (
 CREATE TABLE S_purchase_order_details (
   purchase_order_details_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   quantity DECIMAL(18,4),
   unit_cost DECIMAL(19,4),
@@ -326,6 +376,11 @@ CREATE TABLE S_purchase_order_details (
 CREATE TABLE S_inventory_transactions (
   inventory_transactions_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   transaction_type INT,
   transaction_created_date TIMESTAMP,
@@ -337,6 +392,11 @@ CREATE TABLE S_inventory_transactions (
 CREATE TABLE S_invoices (
   invoices_key STRING,
   load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
   deleted BOOLEAN,
   invoice_date TIMESTAMP,
   due_date TIMESTAMP,
@@ -349,8 +409,7 @@ CREATE TABLE L_employee_privileges (
   link_employee_privileges_key STRING,
   employees_key STRING,
   privileges_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) STORED AS ORC;
 
 CREATE TABLE L_purchase_orders (
   link_purchase_orders_key STRING,
@@ -359,8 +418,7 @@ CREATE TABLE L_purchase_orders (
   created_by_employees_key STRING,
   approved_by_employees_key STRING,
   submitted_by_employees_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) STORED AS ORC;
 
 
 CREATE TABLE L_orders (
@@ -369,8 +427,7 @@ CREATE TABLE L_orders (
   employees_key STRING,
   customers_key STRING,
   shippers_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) STORED AS ORC;
 
 CREATE TABLE L_order_details (
   link_order_details_key STRING,
@@ -385,8 +442,7 @@ CREATE TABLE L_invoices (
   link_invoices_key STRING,
   invoices_key STRING,
   orders_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) STORED AS ORC;
 
 CREATE TABLE L_purchase_order_details (
   link_purchase_order_details_key STRING,
