@@ -1,4 +1,4 @@
-
+use justin_northwind_raw;
 drop table if exists h_customers;
 drop table if exists h_employees;
 drop table if exists h_inventory_transactions;
@@ -35,58 +35,6 @@ drop table if exists s_purchase_orders;
 drop table if exists s_purchase_order_details;
 drop table if exists s_shippers;
 drop table if exists s_suppliers;
-
-CREATE TABLE R_purchase_order_status (
-  purchase_order_status_id INT,
-  status STRING,
-  load_dt TIMESTAMP,
-  modified_dt TIMESTAMP) STORED AS ORC
-;
-
-CREATE TABLE R_inventory_transaction_types (
-  inventory_transaction_type_id INT,
-  type_name STRING,
-  load_dt TIMESTAMP,
-  modified_dt TIMESTAMP) STORED AS ORC
-;
-
-CREATE TABLE R_order_details_status (
-  order_details_status_id INT,
-  status_name STRING,
-  load_dt TIMESTAMP,
-  modified_dt TIMESTAMP) STORED AS ORC
-;
-
-CREATE TABLE R_orders_tax_status (
-  order_tax_status_id INT,
-  tax_status_name STRING,
-  load_dt TIMESTAMP,
-  modified_dt TIMESTAMP) STORED AS ORC
-;
-
-CREATE TABLE R_orders_status (
-  order_status_id INT,
-  status_name STRING,
-  load_dt TIMESTAMP,
-  modified_dt TIMESTAMP) STORED AS ORC
-;
-
-CREATE TABLE R_sales_reports (
-  group_by STRING,
-  display STRING,
-  title STRING,
-  filter_row_source STRING,
-  `default` INT,
-  load_dt TIMESTAMP,
-  modified_dt TIMESTAMP) STORED AS ORC
-;
-
-CREATE TABLE R_strings (
-  string_id INT ,
-  string_data STRING,
-  load_dt TIMESTAMP,
-  modified_dt TIMESTAMP) STORED AS ORC
-;
 
 CREATE TABLE H_customers (
   customers_key STRING,
@@ -452,3 +400,82 @@ CREATE TABLE L_purchase_order_details (
   products_key STRING,
   load_dt TIMESTAMP) STORED AS ORC;
   
+  CREATE TABLE R_purchase_order_status (
+  load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
+  deleted BOOLEAN,
+  purchase_order_status_id INT,
+  status STRING) STORED AS ORC;
+
+CREATE TABLE R_inventory_transaction_types (
+  load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
+  deleted BOOLEAN,
+  inventory_transaction_type_id INT,
+  type_name STRING) STORED AS ORC;
+
+CREATE TABLE R_order_details_status (
+  load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
+  deleted BOOLEAN,
+  order_details_status_id INT,
+  status_name STRING) STORED AS ORC;
+
+CREATE TABLE R_orders_tax_status (
+  load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
+  deleted BOOLEAN,
+  order_tax_status_id INT,
+  tax_status_name STRING) STORED AS ORC;
+
+CREATE TABLE R_orders_status (
+  load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
+  deleted BOOLEAN,
+  order_status_id INT,
+  status_name STRING) STORED AS ORC;
+
+CREATE TABLE R_sales_reports (
+  load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
+  deleted BOOLEAN,
+  group_by STRING,
+  display STRING,
+  title STRING,
+  filter_row_source STRING,
+  `default` INT) STORED AS ORC;
+
+CREATE TABLE R_strings (
+  load_dt TIMESTAMP,
+  mod_dt TIMESTAMP,
+  mod_type STRING,
+  mod_row_id INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
+  deleted BOOLEAN,
+  string_id INT ,
+  string_data STRING) STORED AS ORC;
