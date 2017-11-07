@@ -332,6 +332,9 @@ LOCATION 'hdfs:///user/rn185083/northwind/invoices'
 ;
 
 CREATE EXTERNAL TABLE stg_northwind_order_details_status (
+  DTL__CAPXTIMESTAMP STRING,
+  DTL__CAPXACTION STRING,
+  DTL__CAPXROWID INT,
   id INT,
   status_name STRING  
 )
