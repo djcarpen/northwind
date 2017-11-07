@@ -449,5 +449,6 @@ CREATE TABLE L_purchase_order_details (
   purchase_order_details_key STRING,
   purchase_orders_key STRING,
   inventory_transactions_key STRING,
+  products_key STRING,
   load_dt TIMESTAMP) STORED AS ORC;
   
