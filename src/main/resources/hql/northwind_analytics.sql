@@ -118,4 +118,5 @@ group by company;
 select split(split(regexp_replace(supplier_ids,'"',''),','),';')
 from stg_northwind_products p
 
+select supplier_ids from stg_northwind_products
 
