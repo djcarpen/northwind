@@ -47,12 +47,12 @@ and edl_ingest_time = ${edl_ingest_time||||string}$;
 
 insert into table H_products 
 select distinct
-        upper(regexp_replace(sp.product_code, '"', '')),
+        upper(regexp_replace(sp.product_name, '"', '')),
         sp.id,
         regexp_replace(sp.product_name, '"', ''),
         current_timestamp 
 from stg_northwind_products sp
-where not exists (select 1 from h_products hp where upper(regexp_replace(sp.product_code, '"', '')) = hp.products_key)
+where not exists (select 1 from h_products hp where upper(regexp_replace(sp.product_name, '"', '')) = hp.products_key)
 and edl_ingest_time = ${edl_ingest_time||||string}$;
 
 insert into table H_invoices
@@ -126,7 +126,7 @@ select
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time,        
         regexp_replace(last_name, '"', ''),
@@ -155,7 +155,7 @@ select
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         regexp_replace(company, '"', ''),
@@ -184,7 +184,7 @@ select
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         regexp_replace(last_name, '"', ''),
@@ -208,12 +208,12 @@ where edl_ingest_time = ${edl_ingest_time||||string}$;
  
 insert into table S_products
 select 
-        upper(regexp_replace(product_code, '"', '')),
+        upper(regexp_replace(product_name, '"', '')),
         current_timestamp load_dt,
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         regexp_replace(product_code, '"', ''),
@@ -237,7 +237,7 @@ select
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         invoice_date,
@@ -255,7 +255,7 @@ SELECT
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         tax_status_id,
@@ -283,7 +283,7 @@ select
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         quantity,
@@ -301,7 +301,7 @@ SELECT
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         status_id,
@@ -325,7 +325,7 @@ select
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         quantity,
@@ -342,7 +342,7 @@ SELECT
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time,
         trim(regexp_replace(last_name,'"','')) last_name,
@@ -371,7 +371,7 @@ select
         concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
         regexp_replace(dtl__capxaction,'"','') mod_type,
         dtl__capxrowid mod_row_id,
-        case when regexp_replace(dtl__capxtimestamp,'"','') = 'D' then 1 else 0 end deleted,
+        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
         edl_ingest_channel,
         edl_ingest_time, 
         transaction_type,
@@ -438,28 +438,30 @@ and not exists (select 1 from l_orders where link_orders_key = upper(concat_ws("
 
 insert into table l_order_details  
 select distinct
-        upper(concat_ws("-",nvl(cast(od.id as string),''),nvl(cast(od.order_id as string),''),regexp_replace(nvl(p.product_code,''), '"', ''),nvl(cast(od.purchase_order_id as string),''),nvl(cast(od.inventory_id as string),''))) link_order_details_key,
+        upper(concat_ws("-",nvl(cast(od.id as string),''),nvl(cast(od.order_id as string),''),regexp_replace(nvl(p.product_name,''), '"', ''),nvl(cast(od.purchase_order_id as string),''),nvl(cast(od.inventory_id as string),''))) link_order_details_key,
         upper(nvl(cast(od.id as string),'')) order_details_key,
         upper(nvl(cast(od.order_id as string),'')) orders_key,
-        upper(regexp_replace(nvl(p.product_code,''), '"', '')) products_key,
+        upper(regexp_replace(nvl(p.product_name,''), '"', '')) products_key,
         upper(nvl(cast(od.purchase_order_id as string),'')) purchase_orders_key,
         upper(nvl(cast(od.inventory_id as string),'')) inventory_transactions_key,
         CURRENT_TIMESTAMP() load_dt
 from stg_northwind_order_details od
 left join stg_northwind_products p on od.product_id = p.id
 where od.edl_ingest_time = ${edl_ingest_time||||string}$
-and not exists (select 1 from l_order_details lod where lod.link_order_details_key = upper(concat_ws("-",nvl(cast(od.id as string),''),nvl(cast(od.order_id as string),''),regexp_replace(nvl(p.product_code,''), '"', ''),nvl(cast(od.purchase_order_id as string),''),nvl(cast(od.inventory_id as string),''))));
+and not exists (select 1 from l_order_details lod where lod.link_order_details_key = upper(concat_ws("-",nvl(cast(od.id as string),''),nvl(cast(od.order_id as string),''),regexp_replace(nvl(p.product_name,''), '"', ''),nvl(cast(od.purchase_order_id as string),''),nvl(cast(od.inventory_id as string),''))));
 
 insert into table l_purchase_order_details
 select distinct
-        upper(concat_ws("-",nvl(cast(pod.id as string),''),nvl(cast(pod.purchase_order_id as string),''),nvl(cast(pod.inventory_id as string),''))) link_purchase_order_details_key,
+        upper(concat_ws("-",nvl(cast(pod.id as string),''),nvl(cast(pod.purchase_order_id as string),''),nvl(cast(pod.inventory_id as string),''),nvl(regexp_replace(p.product_name, '"', ''),''))) link_purchase_order_details_key,
         upper(nvl(cast(pod.id as string),'')) purchase_order_details_key,
         upper(nvl(cast(pod.purchase_order_id as string),'')) purchase_orders_key,
         upper(nvl(cast(pod.inventory_id as string),'')) inventory_transactions_key,
+        upper(nvl(regexp_replace(p.product_name, '"', ''),'')) products_key,
         CURRENT_TIMESTAMP() load_dt
 from stg_northwind_purchase_order_details pod
-where edl_ingest_time = ${edl_ingest_time||||string}$
-and not exists (select 1 from l_purchase_order_details where link_purchase_order_details_key = upper(concat_ws("-",nvl(cast(pod.id as string),''),nvl(cast(pod.purchase_order_id as string),''),nvl(cast(pod.inventory_id as string),''))));
+left join stg_northwind_products p on pod.product_id = p.id
+where pod.edl_ingest_time = ${edl_ingest_time||||string}$
+and not exists (select 1 from l_purchase_order_details where link_purchase_order_details_key = upper(concat_ws("-",nvl(cast(pod.id as string),''),nvl(cast(pod.purchase_order_id as string),''),nvl(cast(pod.inventory_id as string),''),nvl(regexp_replace(p.product_name, '"', ''),''))));
  
 insert into table R_purchase_order_status 
 select distinct
