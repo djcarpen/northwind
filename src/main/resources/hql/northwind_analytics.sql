@@ -111,7 +111,7 @@ group by company;
 
 
 -- Question 5: Supplier Performance (supplier company name, product name, item count)
-
+use justin_northwind_stg;
 select s.company, p.product_name, sum(pod.quantity) as item_count
 from stg_northwind_purchase_orders po
 join stg_northwind_purchase_order_details pod on po.id = pod.purchase_order_id
@@ -120,6 +120,7 @@ join stg_northwind_products p on pod.product_id = p.id
 group by s.company, p.product_name
 order by company, product_name;
 
+use justin_northwind_raw;
 select hs.company, hp.product_name, sum(spod.quantity) as item_count
 from (select * from (select rank() over (partition by purchase_orders_key order by mod_dt desc) as rnk, purchase_orders_key from s_purchase_orders) x where rnk = 1) spo
 join l_purchase_order_details lpod on lpod.purchase_orders_key = spo.purchase_orders_key

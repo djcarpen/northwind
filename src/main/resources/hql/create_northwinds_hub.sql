@@ -1,4 +1,5 @@
-use justin_northwind_raw;
+use justin_northwind_hub;
+
 drop table if exists h_customers;
 drop table if exists h_employees;
 drop table if exists h_inventory_transactions;
@@ -40,78 +41,103 @@ CREATE TABLE H_customers (
   customers_key STRING,
   customer_id INT ,
   company STRING,
-  load_dt TIMESTAMP) STORED AS ORC;
-
+  load_dt TIMESTAMP) 
+clustered by (customers_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
+  
 CREATE TABLE H_privileges (
   privileges_key STRING,
   privilege_id INT ,
   privilege_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP)
+clustered by (privileges_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_employees (
   employees_key STRING,
   employee_id INT ,
   email_address STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (employees_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_suppliers (
   suppliers_key STRING,
   supplier_id INT ,
   company STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP)
+clustered by (suppliers_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_shippers (
   shippers_key STRING,
   shipper_id INT ,
   company STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (shippers_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_products (
   products_key STRING,
   product_id int,
   product_name STRING,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (products_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_invoices (
   invoices_key STRING,
   invoice_id INT ,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (invoices_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_orders (
   orders_key STRING,
   order_id INT ,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (orders_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_order_details (
   order_details_key STRING, 
   order_detail_id INT,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (order_details_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_purchase_orders (
   purchase_orders_key STRING,
   purchase_order_id INT ,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (purchase_orders_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_purchase_order_details (
   purchase_order_details_key STRING,
   purchase_order_detail_id INT ,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (purchase_order_details_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE H_inventory_transactions (
   inventory_transactions_key STRING,
   inventory_transaction_id INT ,
-  load_dt TIMESTAMP) STORED AS ORC
-;
+  load_dt TIMESTAMP) 
+clustered by (inventory_transactions_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_customers (
   customers_key STRING,
@@ -137,8 +163,10 @@ CREATE TABLE S_customers (
   country_region STRING,
   web_page STRING,
   notes STRING,
-  attachments STRING) STORED AS ORC
-;
+  attachments STRING) 
+clustered by (customers_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_employees (
   employees_key STRING,
@@ -164,8 +192,10 @@ CREATE TABLE S_employees (
   country_region STRING,
   web_page STRING,
   notes STRING,
-  attachments STRING) STORED AS ORC
-;
+  attachments STRING) 
+clustered by (employees_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_shippers (
   shippers_key STRING,
@@ -191,8 +221,10 @@ CREATE TABLE S_shippers (
   country_region STRING,
   web_page STRING,
   notes STRING,
-  attachments STRING) STORED AS ORC
-;
+  attachments STRING) 
+clustered by (shippers_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_orders (
   orders_key STRING,
@@ -217,7 +249,10 @@ CREATE TABLE S_orders (
   taxes DECIMAL(19,4),
   payment_type STRING,
   paid_date TIMESTAMP,
-  notes STRING) STORED AS ORC;
+  notes STRING) 
+clustered by (orders_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_order_details (
   order_details_key STRING,
@@ -232,9 +267,10 @@ CREATE TABLE S_order_details (
   unit_price DECIMAL(19,4),
   discount DOUBLE,
   status_id INT,
-  date_allocated TIMESTAMP) STORED AS ORC;
-
-
+  date_allocated TIMESTAMP)
+clustered by (order_details_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_products (
   products_key STRING,
@@ -255,8 +291,10 @@ CREATE TABLE S_products (
   discontinued INT,
   minimum_reorder_quantity INT,
   category STRING,
-  attachments STRING) STORED AS ORC
-;
+  attachments STRING) 
+clustered by (products_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_suppliers (
   suppliers_key STRING,
@@ -282,8 +320,10 @@ CREATE TABLE S_suppliers (
   country_region STRING,
   web_page STRING,
   notes STRING,
-  attachments STRING) STORED AS ORC
-;
+  attachments STRING) 
+clustered by (suppliers_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_purchase_orders (
   purchase_orders_key STRING,
@@ -304,8 +344,10 @@ CREATE TABLE S_purchase_orders (
   payment_amount DECIMAL(19,4),
   payment_method STRING,
   notes STRING,
-  approved_date TIMESTAMP) STORED AS ORC
-;
+  approved_date TIMESTAMP) 
+clustered by (purchase_orders_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_purchase_order_details (
   purchase_order_details_key STRING,
@@ -319,7 +361,10 @@ CREATE TABLE S_purchase_order_details (
   quantity DECIMAL(18,4),
   unit_cost DECIMAL(19,4),
   date_received TIMESTAMP,
-  posted_to_inventory INT) STORED AS ORC;
+  posted_to_inventory INT) 
+clustered by (purchase_order_details_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_inventory_transactions (
   inventory_transactions_key STRING,
@@ -334,8 +379,10 @@ CREATE TABLE S_inventory_transactions (
   transaction_created_date TIMESTAMP,
   transaction_modified_date TIMESTAMP,
   quantity INT,
-  comments STRING) STORED AS ORC
-;
+  comments STRING) 
+clustered by (inventory_transactions_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE S_invoices (
   invoices_key STRING,
@@ -350,8 +397,10 @@ CREATE TABLE S_invoices (
   due_date TIMESTAMP,
   tax DECIMAL(19,4),
   shipping DECIMAL(19,4),
-  amount_due DECIMAL(19,4)) STORED AS ORC
-;
+  amount_due DECIMAL(19,4)) 
+clustered by (invoices_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE LSAT_employee_privileges (
   link_employee_privileges_key STRING,
@@ -363,7 +412,10 @@ CREATE TABLE LSAT_employee_privileges (
   mod_row_id INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN) STORED AS ORC;
+  deleted BOOLEAN) 
+clustered by (link_employee_privileges_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE L_purchase_orders (
   link_purchase_orders_key STRING,
@@ -372,8 +424,10 @@ CREATE TABLE L_purchase_orders (
   created_by_employees_key STRING,
   approved_by_employees_key STRING,
   submitted_by_employees_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC;
-
+  load_dt TIMESTAMP) 
+clustered by (link_purchase_orders_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE L_orders (
   link_orders_key STRING,
@@ -381,7 +435,10 @@ CREATE TABLE L_orders (
   employees_key STRING,
   customers_key STRING,
   shippers_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC;
+  load_dt TIMESTAMP)
+clustered by (link_orders_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE L_order_details (
   link_order_details_key STRING,
@@ -390,13 +447,19 @@ CREATE TABLE L_order_details (
   products_key STRING,
   purchase_orders_key STRING,
   inventory_transactions_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC;
+  load_dt TIMESTAMP) 
+clustered by (link_order_details_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE L_invoices (
   link_invoices_key STRING,
   invoices_key STRING,
   orders_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC;
+  load_dt TIMESTAMP)
+clustered by (link_invoices_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
 
 CREATE TABLE L_purchase_order_details (
   link_purchase_order_details_key STRING,
@@ -404,9 +467,12 @@ CREATE TABLE L_purchase_order_details (
   purchase_orders_key STRING,
   inventory_transactions_key STRING,
   products_key STRING,
-  load_dt TIMESTAMP) STORED AS ORC;
+  load_dt TIMESTAMP) 
+clustered by (link_purchase_order_details_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
   
-  CREATE TABLE R_purchase_order_status (
+CREATE TABLE R_purchase_order_status (
   load_dt TIMESTAMP,
   mod_dt TIMESTAMP,
   mod_type STRING,
@@ -415,7 +481,8 @@ CREATE TABLE L_purchase_order_details (
   edl_ingest_time STRING,
   deleted BOOLEAN,
   purchase_order_status_id INT,
-  status STRING) STORED AS ORC;
+  status STRING) 
+stored as ORC;
 
 CREATE TABLE R_inventory_transaction_types (
   load_dt TIMESTAMP,
@@ -426,7 +493,8 @@ CREATE TABLE R_inventory_transaction_types (
   edl_ingest_time STRING,
   deleted BOOLEAN,
   inventory_transaction_type_id INT,
-  type_name STRING) STORED AS ORC;
+  type_name STRING) 
+stored as ORC;
 
 CREATE TABLE R_order_details_status (
   load_dt TIMESTAMP,
@@ -437,7 +505,8 @@ CREATE TABLE R_order_details_status (
   edl_ingest_time STRING,
   deleted BOOLEAN,
   order_details_status_id INT,
-  status_name STRING) STORED AS ORC;
+  status_name STRING) 
+stored as ORC;
 
 CREATE TABLE R_orders_tax_status (
   load_dt TIMESTAMP,
@@ -448,7 +517,8 @@ CREATE TABLE R_orders_tax_status (
   edl_ingest_time STRING,
   deleted BOOLEAN,
   order_tax_status_id INT,
-  tax_status_name STRING) STORED AS ORC;
+  tax_status_name STRING) 
+stored as ORC;
 
 CREATE TABLE R_orders_status (
   load_dt TIMESTAMP,
@@ -459,7 +529,8 @@ CREATE TABLE R_orders_status (
   edl_ingest_time STRING,
   deleted BOOLEAN,
   order_status_id INT,
-  status_name STRING) STORED AS ORC;
+  status_name STRING)
+stored as ORC;
 
 CREATE TABLE R_sales_reports (
   load_dt TIMESTAMP,
@@ -473,7 +544,8 @@ CREATE TABLE R_sales_reports (
   display STRING,
   title STRING,
   filter_row_source STRING,
-  `default` INT) STORED AS ORC;
+  `default` INT) 
+stored as ORC;
 
 CREATE TABLE R_strings (
   load_dt TIMESTAMP,
@@ -484,4 +556,5 @@ CREATE TABLE R_strings (
   edl_ingest_time STRING,
   deleted BOOLEAN,
   string_id INT ,
-  string_data STRING) STORED AS ORC;
+  string_data STRING) 
+stored as ORC;
