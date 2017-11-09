@@ -414,6 +414,29 @@ where raw.load_dt > hub.load_dt or hub.load_dt is null;
 
 -- ------------------------------------- load links -------------------------------------
 
+insert overwrite table temp_lsat_employee_privileges
+SELECT distinct 
+    raw.link_employee_privileges_key,
+    raw.employees_key,
+    raw.privileges_key,
+    raw.load_dt,
+    raw.mod_dt,
+    raw.mod_type,
+    raw.mod_row_id,
+    raw.edl_ingest_channel,
+    raw.edl_ingest_time,
+    raw.deleted
+FROM justin_northwind_raw.lsat_employee_privileges raw
+join ( select distinct link_employee_privileges_key
+       from( select rank() over(partition by link_employee_privileges_key order by mod_dt desc) as rnk, *
+             from justin_northwind_raw.lsat_employee_privileges) x
+       where rnk = 1) s on raw.link_employee_privileges_key = s.link_employee_privileges_key
+left join justin_northwind_hub.lsat_employee_privileges hub on raw.link_employee_privileges_key = hub.link_employee_privileges_key
+where raw.load_dt > hub.load_dt or hub.load_dt is null;
+
+
+
+
 insert overwrite table temp_l_invoices
 SELECT distinct 
     raw.link_invoices_key,
@@ -427,6 +450,76 @@ join ( select distinct invoices_key
        where rnk = 1) s on raw.invoices_key = s.invoices_key
 left join justin_northwind_hub.l_invoices hub on raw.link_invoices_key = hub.link_invoices_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;
+
+insert overwrite table temp_l_order_details
+SELECT distinct 
+    raw.link_order_details_key,
+    raw.order_details_key,
+    raw.orders_key,
+    raw.products_key,
+    raw.purchase_orders_key,
+    raw.inventory_transactions_key,
+    raw.load_dt
+FROM justin_northwind_raw.l_order_details raw
+join ( select distinct order_details_key
+       from( select rank() over(partition by order_details_key order by mod_dt desc) as rnk, *
+             from justin_northwind_raw.s_order_details) x
+       where rnk = 1) s on raw.order_details_key = s.order_details_key
+left join justin_northwind_hub.l_order_details hub on raw.link_order_details_key = hub.link_order_details_key
+where raw.load_dt > hub.load_dt or hub.load_dt is null;
+
+insert overwrite table temp_l_orders
+SELECT distinct 
+    raw.link_orders_key,
+    raw.orders_key,
+    raw.employees_key,
+    raw.customers_key,
+    raw.shippers_key,
+    raw.load_dt
+FROM justin_northwind_raw.l_orders raw
+join ( select distinct orders_key
+       from( select rank() over(partition by orders_key order by mod_dt desc) as rnk, *
+             from justin_northwind_raw.s_orders) x
+       where rnk = 1) s on raw.orders_key = s.orders_key
+left join justin_northwind_hub.l_orders hub on raw.link_orders_key = hub.link_orders_key
+where raw.load_dt > hub.load_dt or hub.load_dt is null;
+
+insert overwrite table temp_l_purchase_order_details
+SELECT distinct 
+    raw.link_purchase_order_details_key,
+    raw.purchase_order_details_key,
+    raw.purchase_orders_key,
+    raw.inventory_transactions_key,
+    raw.products_key,
+    raw.load_dt
+FROM justin_northwind_raw.l_purchase_order_details raw
+join ( select distinct purchase_order_details_key
+       from( select rank() over(partition by purchase_order_details_key order by mod_dt desc) as rnk, *
+             from justin_northwind_raw.s_purchase_order_details) x
+       where rnk = 1) s on raw.purchase_order_details_key = s.purchase_order_details_key
+left join justin_northwind_hub.l_purchase_order_details hub on raw.link_purchase_order_details_key = hub.link_purchase_order_details_key
+where raw.load_dt > hub.load_dt or hub.load_dt is null;
+
+insert overwrite table temp_l_purchase_orders
+SELECT distinct 
+    raw.link_purchase_orders_key,
+    raw.purchase_orders_key,
+    raw.suppliers_key,
+    raw.created_by_employees_key,
+    raw.approved_by_employees_key,
+    raw.submitted_by_employees_key,
+    raw.load_dt
+FROM justin_northwind_raw.l_purchase_orders raw
+join ( select distinct purchase_orders_key
+       from( select rank() over(partition by purchase_orders_key order by mod_dt desc) as rnk, *
+             from justin_northwind_raw.s_purchase_orders) x
+       where rnk = 1) s on raw.purchase_orders_key = s.purchase_orders_key
+left join justin_northwind_hub.l_purchase_orders hub on raw.link_purchase_orders_key = hub.link_purchase_orders_key
+where raw.load_dt > hub.load_dt or hub.load_dt is null;
+
+
+
+
 
 delete from justin_northwind_hub.l_invoices where exists ( select 1 from justin_northwind_hub.temp_l_invoices temp where l_invoices.invoices_key = temp.invoices_key);
 
