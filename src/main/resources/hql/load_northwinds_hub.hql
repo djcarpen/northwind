@@ -1,3 +1,4 @@
+use justin_northwind_hub;
 drop table if exists temp_customers;
 drop table if exists temp_employees;
 drop table if exists temp_inventory_transactions;
@@ -9,12 +10,13 @@ drop table if exists temp_purchase_order_details;
 drop table if exists temp_purchase_orders;
 drop table if exists temp_shippers;
 drop table if exists temp_suppliers;
+drop table if exists temp_employee_privileges;
 drop table if exists temp_l_invoices;
 drop table if exists temp_l_order_details;
 drop table if exists temp_l_orders;
 drop table if exists temp_l_purchase_order_details;
 drop table if exists temp_l_purchase_orders;
-drop table if exists temp_lsat_employee_privileges;
+drop table if exists temp_l_employee_privileges;
 
 create temporary table temp_customers(customers_key STRING, load_dt TIMESTAMP, dtl__capxtimestamp TIMESTAMP,
 dtl__capxaction STRING, dtl__capxrowid INT, edl_ingest_channel STRING, edl_ingest_time STRING, edl_soft_delete BOOLEAN,
@@ -107,7 +109,6 @@ submitted_by_employees_key STRING, load_dt TIMESTAMP) ;
 
 create temporary table temp_l_employee_privileges(link_employee_privileges_key STRING, employee_privileges_key STRING,
 employees_key STRING, privileges_key STRING, load_dt TIMESTAMP) ;
-
 
 insert overwrite table temp_customers
 select 
@@ -527,54 +528,7 @@ where raw.load_dt > hub.load_dt or hub.load_dt is null;
 
 
 
-delete from justin_northwind_hub.l_employee_privileges where exists ( select 1 from justin_northwind_hub.temp_l_employee_privileges temp where l_employee_privileges.employee_privileges_key = temp.employee_privileges_key);
-delete from justin_northwind_hub.l_invoices where exists ( select 1 from justin_northwind_hub.temp_l_invoices temp where l_invoices.invoices_key = temp.invoices_key);
-delete from justin_northwind_hub.l_order_details where exists ( select 1 from justin_northwind_hub.temp_l_order_details temp where l_order_details.order_details_key = temp.order_details_key);
-delete from justin_northwind_hub.l_orders where exists ( select 1 from justin_northwind_hub.temp_l_orders temp where l_orders.orders_key = temp.orders_key);
-delete from justin_northwind_hub.l_purchase_order_details where exists ( select 1 from justin_northwind_hub.temp_l_purchase_order_details temp where l_purchase_order_details.purchase_order_details_key = temp.purchase_order_details_key);
-delete from justin_northwind_hub.l_purchase_orders where exists ( select 1 from justin_northwind_hub.temp_l_purchase_orders temp where l_purchase_orders.purchase_orders_key = temp.purchase_orders_key);
-
-insert into table justin_northwind_hub.l_employee_privileges
-SELECT
-    link_employee_privileges_key,
-    employee_privileges_key,
-    employees_key,
-    privileges_key,
-    load_dt
-FROM justin_northwind_raw.l_employee_privileges
-where exists ( select 1 from temp_l_employee_privileges temp
-               where l_employee_privileges.employee_privileges_key = temp.employee_privileges_key) ;
-         
-insert into table justin_northwind_hub.l_invoices
-SELECT
-    link_invoices_key,
-    invoices_key,
-    orders_key,
-    load_dt  
-FROM justin_northwind_raw.l_invoices
-where exists ( select 1 from temp_l_invoices temp
-               where l_invoices.invoices_key = temp.invoices_key) ;
-               
-insert into table justin_northwind_hub.l_order_details
-SELECT               
-    link_order_details_key
-    order_details_key
-    orders_key
-    products_key
-    purchase_orders_key
-    inventory_transactions_key
-    load_dt              
-from justin_northwind_raw.l_order_details
-where exists ( select 1 from temp_l_order_details temp
-               where l_order_details.order_details_              
-               
-               
-               
-               
-               
-               
-               
-               
+                               
 -- ------------------------------------- load hubs -------------------------------------
 
 delete from justin_northwind_hub.h_customers where exists ( select 1 from justin_northwind_hub.temp_customers temp where h_customers.customers_key = temp.customers_key and temp.edl_soft_delete = 1);
@@ -588,6 +542,7 @@ delete from justin_northwind_hub.h_purchase_order_details where exists ( select 
 delete from justin_northwind_hub.h_purchase_orders where exists ( select 1 from justin_northwind_hub.temp_purchase_orders temp where h_purchase_orders.purchase_orders_key = temp.purchase_orders_key and temp.edl_soft_delete = 1);
 delete from justin_northwind_hub.h_shippers where exists ( select 1 from justin_northwind_hub.temp_shippers temp where h_shippers.shippers_key = temp.shippers_key and temp.edl_soft_delete = 1);
 delete from justin_northwind_hub.h_suppliers where exists ( select 1 from justin_northwind_hub.temp_suppliers temp where h_suppliers.suppliers_key = temp.suppliers_key and temp.edl_soft_delete = 1);
+delete from justin_northwind_hub.h_employee_privileges where exists ( select 1 from justin_northwind_hub.temp_employee_privileges temp where h_employee_privileges.employee_privileges_key = temp.employee_privileges_key and temp.edl_soft_delete = 1);
 
 
 
@@ -706,6 +661,16 @@ FROM justin_northwind_raw.h_privileges
 where exists ( select 1 from temp_privileges temp
                where h_privileges.privileges_key = temp.privileges_key) ;
                
+insert into table justin_northwind_hub.h_employee_privileges
+select 
+    employee_privileges_key, 
+    employees_key,
+    privileges_key,
+    load_dt
+from justin_northwind_raw.h_employee_privileges
+where not exists ( select 1 from temp_employee_privileges temp
+                   where h_employee_privileges.employee_privileges_key = temp.employee_privileges_key)
+               
 -- ------------------------------------- load satellites -------------------------------------
 
 delete from justin_northwind_hub.s_customers where exists ( select 1 from justin_northwind_hub.temp_customers temp where s_customers.customers_key = temp.customers_key);
@@ -719,6 +684,23 @@ delete from justin_northwind_hub.s_purchase_order_details where exists ( select 
 delete from justin_northwind_hub.s_purchase_orders where exists ( select 1 from justin_northwind_hub.temp_purchase_orders temp where s_purchase_orders.purchase_orders_key = temp.purchase_orders_key);
 delete from justin_northwind_hub.s_shippers where exists ( select 1 from justin_northwind_hub.temp_shippers temp where s_shippers.shippers_key = temp.shippers_key);
 delete from justin_northwind_hub.s_suppliers where exists ( select 1 from justin_northwind_hub.temp_suppliers temp where s_suppliers.suppliers_key = temp.suppliers_key);
+delete from justin_northwind_hub.s_employee_privileges where exists ( select 1 from justin_northwind_hub.temp_employee_privileges temp where s_employee_privileges.employee_privileges_key = temp.employee_privileges_key);
+
+
+insert into table justin_northwind_hub.s_employee_privileges
+select 
+        employee_privileges_key,
+        load_dt,
+        dtl__capxtimestamp,
+        dtl__capxaction,
+        dtl__capxrowid,
+        edl_ingest_channel,
+        edl_ingest_time,
+        edl_soft_delete,         
+        edl_source_file
+from temp_employee_privileges
+where edl_soft_delete = 0;
+
 
 insert into table justin_northwind_hub.s_customers 
 select
@@ -996,68 +978,88 @@ where edl_soft_delete = 0;
 -- ------------------------------------- load links -------------------------------------
 
 
+delete from justin_northwind_hub.l_employee_privileges where exists ( select 1 from justin_northwind_hub.temp_l_employee_privileges temp where l_employee_privileges.employee_privileges_key = temp.employee_privileges_key);
+delete from justin_northwind_hub.l_invoices where exists ( select 1 from justin_northwind_hub.temp_l_invoices temp where l_invoices.invoices_key = temp.invoices_key);
+delete from justin_northwind_hub.l_order_details where exists ( select 1 from justin_northwind_hub.temp_l_order_details temp where l_order_details.order_details_key = temp.order_details_key);
+delete from justin_northwind_hub.l_orders where exists ( select 1 from justin_northwind_hub.temp_l_orders temp where l_orders.orders_key = temp.orders_key);
+delete from justin_northwind_hub.l_purchase_order_details where exists ( select 1 from justin_northwind_hub.temp_l_purchase_order_details temp where l_purchase_order_details.purchase_order_details_key = temp.purchase_order_details_key);
+delete from justin_northwind_hub.l_purchase_orders where exists ( select 1 from justin_northwind_hub.temp_l_purchase_orders temp where l_purchase_orders.purchase_orders_key = temp.purchase_orders_key);
 
-
-delete
-from justin_northwind_hub.l_invoices raw 
-where exists ( select 1 
-               from justin_northwind_hub.l_invoices hub
-               where raw.link_invoices_key = hub.link_invoices_key
-               and raw.load_dt > hub.load_dt);
-
-delete
-from justin_northwind_hub.l_order_details raw 
-where exists ( select 1 
-               from justin_northwind_hub.l_order_details hub
-               where raw.link_order_details_key = hub.link_order_details_key
-               and raw.load_dt > hub.load_dt);
-
-delete
-from justin_northwind_hub.l_orders raw 
-where exists ( select 1 
-               from justin_northwind_hub.l_orders hub
-               where raw.link_orders_key = hub.link_orders_key
-               and raw.load_dt > hub.load_dt);
-
-delete
-from justin_northwind_hub.l_purchase_order_details raw 
-where exists ( select 1 
-               from justin_northwind_hub.l_purchase_order_details hub
-               where raw.link_order_purchase_details_key = hub.link_purchase_order_details_key
-               and raw.load_dt > hub.load_dt);
-               
-delete
-from justin_northwind_hub.l_purchase_orders raw 
-where exists ( select 1 
-               from justin_northwind_hub.l_purchase_orders hub
-               where raw.link_puchase_orders_key = hub.link_puchase_orders_key
-               and raw.load_dt > hub.load_dt);    
-               
 insert into table justin_northwind_hub.l_employee_privileges
-select 
-    link_employee_privileges_key, 
+SELECT
+    link_employee_privileges_key,
+    employee_privileges_key,
     employees_key,
     privileges_key,
     load_dt
-from justin_northwind_raw.l_employee_privileges raw
-where not exists ( select 1 
-                   from justin_northwind_hub.l_employee_privileges hub
-                   where raw.link_employee_privileges_key = hub.link_employee_privileges_key)
+FROM justin_northwind_raw.l_employee_privileges
+where exists ( select 1 from temp_l_employee_privileges temp
+               where l_employee_privileges.employee_privileges_key = temp.employee_privileges_key) ;
+         
+insert into table justin_northwind_hub.l_invoices
+SELECT
+    link_invoices_key,
+    invoices_key,
+    orders_key,
+    load_dt  
+FROM justin_northwind_raw.l_invoices
+where exists ( select 1 from temp_l_invoices temp
+               where l_invoices.invoices_key = temp.invoices_key);
+               
+insert into table justin_northwind_hub.l_order_details
+SELECT               
+    link_order_details_key
+    order_details_key
+    orders_key
+    products_key
+    purchase_orders_key
+    inventory_transactions_key
+    load_dt              
+from justin_northwind_raw.l_order_details
+where exists ( select 1 from temp_l_order_details temp
+               where l_order_details.order_details_key = temp.order_details_key) ;             
+               
+insert into table justin_northwind_hub.l_orders
+SELECT               
+    link_orders_key,
+    orders_key,
+    employees_key,
+    customers_key,
+    shippers_key,
+    load_dt             
+FROM justin_northwind_raw.l_orders
+where exists ( select 1 from temp_l_orders temp
+               where l_orders.orders_key = temp.orders_key);              
+               
+insert into table justin_northwind_hub.l_purchase_order_details
+SELECT               
+    link_purchase_order_details_key,
+    purchase_order_details_key,
+    purchase_orders_key,
+    inventory_transactions_key,
+    products_key,
+    load_dt        
+FROM justin_northwind_raw.l_purchase_order_details
+where exists ( select 1 from temp_l_purchase_order_details temp
+               where l_purchase_order_details.purchase_order_details_key = temp.purchase_order_details_key);                 
+               
+insert into table justin_northwind_hub.l_purchase_orders
+SELECT               
+    link_purchase_orders_key,
+    purchase_orders_key,
+    suppliers_key,
+    created_by_employees_key,
+    approved_by_employees_key,
+    submitted_by_employees_key,
+    load_dt     
+FROM justin_northwind_raw.l_purchase_orders
+where exists ( select 1 from temp_l_purchase_orders temp
+               where l_purchase_orders.purchase_orders_key = temp.purchase_orders_key); 
 
 
-insert into table justin_northwind_raw.H_employee_privileges
-select distinct 
-        upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', '')),upper(regexp_replace(nvl(e.email_address,''), '"', '')),upper(regexp_replace(nvl(p.privilege_name,''), '"', ''))) link_employee_privileges_key,
-        upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))) employee_privileges_key,
-        upper(regexp_replace(nvl(e.email_address,''), '"', '')) employees_key,
-        upper(regexp_replace(nvl(p.privilege_name,''), '"', '')) privileges_key,
-        current_timestamp load_dt
-from justin_northwind_stg.stg_northwind_employee_privileges ep
-join (select distinct id, email_address from justin_northwind_stg.stg_northwind_employees) e on ep.employee_id = e.id
-join (select distinct id, privilege_name from justin_northwind_stg.stg_northwind_privileges) p on ep.privilege_id = p.id
-where 1=1
---and edl_ingest_time = ${edl_ingest_time||||string}$
-and not exists (select 1 from justin_northwind_raw.h_employee_privileges hep where hep.employee_privileges_key = upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))));
+
+
+
 
 
 
