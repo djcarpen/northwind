@@ -34,9 +34,9 @@
 
 	<start to="edl-northwind-loadstaging-loadschema"/>
 
-	<action name="edl-northwind-loadstaging-loadschema-workflow">
+	<action name="edl-northwind-loadstaging-loadschema">
 		<sub-workflow>
-			<app-path>${workflowRootDir}/edl-northwind-loadstaging-loadschema-workflow.xml</app-path>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loadstaging-loadschema-workflow.xml</app-path>
 			<propagate-configuration/>
 			<configuration>
 				<property>

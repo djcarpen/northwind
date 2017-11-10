@@ -36,7 +36,7 @@
 
 	<action name="edl-northwind-loadrdv-insert">
 		<sub-workflow>
-			<app-path>${workflowRootDir}/edl-northwind-loadrdv-insert-workflow.xml</app-path>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loadrdv-insert-workflow.xml</app-path>
 			<propagate-configuration/>
 			<configuration>
 				<property>

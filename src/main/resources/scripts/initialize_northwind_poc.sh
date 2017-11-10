@@ -13,20 +13,26 @@ fi
 
 hdfs dfs -rmr $3/northwind
 
+hdfs dfs -rmr /edl/poc/northwind
+
+hdfs dfs -mkdir -p /edl/poc/northwind
+
 rm -r $2/northwind
 
-rm $2/northwind_partitions.hql
+rm $2/create_northwind_partitions.hql
 
 mkdir $2/northwind
 
 cd $1/northwind/
 echo "$1/northwind/"
 
-cat > $2/northwind_partitions.hql << EOF1
+cat > $2/create_northwind_partitions.hql << EOF1
 use ${4};
 EOF1
 
-#echo "use ${hivevar:database_name};" >> $2/northwind_partitions.hql
+kinit ia230227  -k -t /etc/security/keytabs/application_keytabs/ia230227.keytab
+
+#echo "use ${hivevar:databaseName};" >> $2/northwind_partitions.hql
 
 for i in $(ls -d */);
 do
@@ -52,14 +58,16 @@ do
         echo $folder_name
         mkdir -p $2/northwind/$folder_name/edl_ingest_channel=$channel/edl_ingest_time=$ingest_time/
         cp $file $2/northwind/$folder_name/edl_ingest_channel=$channel/edl_ingest_time=$ingest_time/
-        echo "ALTER TABLE stg_northwind_$folder_name ADD PARTITION (edl_ingest_channel='$channel', edl_ingest_time='$ingest_time') location 'hdfs://$3/northwind/$folder_name/edl_ingest_channel=$channel/edl_ingest_time=$ingest_time/';" >> $2/northwind_partitions.hql
+        echo "ALTER TABLE stg_northwind_$folder_name ADD PARTITION (edl_ingest_channel='$channel', edl_ingest_time='$ingest_time') location 'hdfs://$3/northwind/$folder_name/edl_ingest_channel=$channel/edl_ingest_time=$ingest_time/';" >> $2/create_northwind_partitions.hql
      done
 done
 
-
+cp $2/create_northwind_partitions.hql $2/resources/hql/
 
 hdfs dfs -put $2/northwind $3
 
-hive -f $2/create_stg_northwind.hql --hivevar database_name=$4
+hdfs dfs -put $2/resources/* /edl/poc/northwind/
 
-hive -f $2/northwind_partitions.hql
+#hive -f $2/create_stg_northwind.hql --hivevar database_name=$4
+
+#hive -f $2/create_northwind_partitions.hql

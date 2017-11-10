@@ -1,5 +1,5 @@
 
-use ${hivevar:database_name};
+use ${hivevar:databaseName};
 
 CREATE EXTERNAL TABLE stg_northwind_customers (
   DTL__CAPXTIMESTAMP STRING,
