@@ -13,6 +13,8 @@ select distinct
 from justin_northwind_stg.stg_northwind_customers sc
 where not exists (select 1 from justin_northwind_raw.h_customers hc where upper(concat_ws("-",regexp_replace(sc.last_name, '"', ''), regexp_replace(sc.first_name, '"', ''), regexp_replace(sc.company, '"', ''))) = hc.customers_key)
 and edl_ingest_time = ${edl_ingest_time||||string}$;
+
+
  
 insert into table justin_northwind_raw.h_employees
 select distinct
@@ -122,12 +124,13 @@ insert into table justin_northwind_raw.s_customers
 select
         upper(concat_ws("-",regexp_replace(last_name, '"', ''), regexp_replace(first_name, '"', ''), regexp_replace(company, '"', ''))),
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,         
+        null edl_soft_delete,         
+        null edl_source_file,        
         regexp_replace(last_name, '"', ''),
         regexp_replace(first_name, '"', ''),
         regexp_replace(email_address, '"', ''),
@@ -151,12 +154,13 @@ insert into table justin_northwind_raw.s_employees
 select
         upper(regexp_replace(email_address, '"', '')),
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,         
+        null edl_source_file,
         regexp_replace(company, '"', ''),
         regexp_replace(last_name, '"', ''),
         regexp_replace(first_name, '"', ''),
@@ -180,12 +184,13 @@ insert into table justin_northwind_raw.s_shippers
 select
         upper(concat_ws("-",regexp_replace(last_name, '"', ''), regexp_replace(first_name, '"', ''), regexp_replace(company, '"', ''))),
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,         
+        null edl_source_file,
         regexp_replace(last_name, '"', ''),
         regexp_replace(first_name, '"', ''),
         regexp_replace(email_address, '"', ''),
@@ -209,12 +214,13 @@ insert into table justin_northwind_raw.s_products
 select 
         upper(regexp_replace(product_name, '"', '')),
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted, 
+        null edl_soft_delete,         
+        null edl_source_file,
         regexp_replace(product_code, '"', ''),
         regexp_replace(description, '"', ''),
         standard_cost,
@@ -233,12 +239,13 @@ insert into table justin_northwind_raw.s_invoices
 select
         upper(cast(id as string)) invoices_key,
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
-        edl_ingest_channel,
-        edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
+        null edl_soft_delete,         
+        null edl_source_file,
+        null edl_soft_delete,
+        null edl_source_file,
         invoice_date,
         due_date,
         tax,
@@ -251,12 +258,13 @@ insert into table justin_northwind_raw.s_orders
 SELECT
         upper(cast(id as string)) orders_key,
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted, 
+        null edl_soft_delete,         
+        null edl_source_file,
         tax_status_id,
         status_id,
         order_date,
@@ -279,12 +287,13 @@ insert into table  justin_northwind_raw.s_order_details
 select
         upper(cast(id as string)) order_details_key,
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,
+        null edl_source_file,
         quantity,
         unit_price,
         discount,
@@ -297,12 +306,13 @@ insert into table justin_northwind_raw.s_purchase_orders
 SELECT
         upper(cast(id as string)) purchase_orders_key,
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted, 
+        null edl_soft_delete,         
+        null edl_source_file,
         status_id,
         submitted_date,
         creation_date,
@@ -321,12 +331,13 @@ insert into table justin_northwind_raw.s_purchase_order_details
 select 
         upper(cast(id as string)) purchase_order_details_key,
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted, 
+        null edl_soft_delete,         
+        null edl_source_file,
         quantity,
         unit_cost,
         date_received,
@@ -338,12 +349,13 @@ insert into table justin_northwind_raw.s_suppliers
 SELECT
         upper(concat_ws("-",cast(id as string), trim(regexp_replace(company,'"','')))) suppliers_key,
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted, 
+        null edl_soft_delete,         
+        null edl_source_file,
         trim(regexp_replace(last_name,'"','')) last_name,
         trim(regexp_replace(first_name,'"','')) first_name,
         trim(regexp_replace(email_address,'"','')) email_address,
@@ -367,12 +379,13 @@ insert into table justin_northwind_raw.s_inventory_transactions
 select 
         upper(cast(id as string)) inventory_transactions_key,
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted, 
+        null edl_soft_delete,         
+        null edl_source_file,
         transaction_type,
         transaction_created_date,
         transaction_modified_date,
@@ -381,23 +394,52 @@ select
 from justin_northwind_stg.stg_northwind_inventory_transactions
 where edl_ingest_time = ${edl_ingest_time||||string}$;
  
-insert into justin_northwind_raw.lsat_employee_privileges 
-select distinct
-        upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))) link_employee_privileges_key,
+insert into table justin_northwind_raw.H_employee_privileges
+select distinct 
+        upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))) employee_privileges_key,
         upper(regexp_replace(nvl(e.email_address,''), '"', '')) employees_key,
         upper(regexp_replace(nvl(p.privilege_name,''), '"', '')) privileges_key,
-        current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
-        edl_ingest_channel,
-        edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted
+        current_timestamp load_dt
 from justin_northwind_stg.stg_northwind_employee_privileges ep
 join (select distinct id, email_address from justin_northwind_stg.stg_northwind_employees) e on ep.employee_id = e.id
 join (select distinct id, privilege_name from justin_northwind_stg.stg_northwind_privileges) p on ep.privilege_id = p.id
-where edl_ingest_time = ${edl_ingest_time||||string}$
-and not exists (select 1 from justin_northwind_raw.lsat_employee_privileges lep where lep.link_employee_privileges_key = upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))));
+where 1=1
+and edl_ingest_time = ${edl_ingest_time||||string}$
+and not exists (select 1 from justin_northwind_raw.h_employee_privileges hep where hep.employee_privileges_key = upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))));
+
+insert into justin_northwind_raw.s_employee_privileges 
+select distinct
+        upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))) employee_privileges_key,
+        current_timestamp load_dt,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
+        edl_ingest_channel,
+        edl_ingest_time,
+        null edl_soft_delete,         
+        null edl_source_file
+from justin_northwind_stg.stg_northwind_employee_privileges ep
+join (select distinct id, email_address from justin_northwind_stg.stg_northwind_employees) e on ep.employee_id = e.id
+join (select distinct id, privilege_name from justin_northwind_stg.stg_northwind_privileges) p on ep.privilege_id = p.id
+where 1=1
+and edl_ingest_time = ${edl_ingest_time||||string}$
+and not exists (select 1 from justin_northwind_raw.s_employee_privileges sep where sep.employee_privileges_key = upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))));
+        
+
+insert into justin_northwind_raw.l_employee_privileges 
+select distinct
+        upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''),regexp_replace(nvl(e.email_address,''), '"', ''),regexp_replace(nvl(p.privilege_name,''), '"', ''))) link_employee_privileges_key,
+        upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))) employee_privileges_key,
+        upper(regexp_replace(nvl(e.email_address,''), '"', '')) employees_key,
+        upper(regexp_replace(nvl(p.privilege_name,''), '"', '')) privileges_key,
+        current_timestamp load_dt
+from justin_northwind_stg.stg_northwind_employee_privileges ep
+join (select distinct id, email_address from justin_northwind_stg.stg_northwind_employees) e on ep.employee_id = e.id
+join (select distinct id, privilege_name from justin_northwind_stg.stg_northwind_privileges) p on ep.privilege_id = p.id
+where 1=1
+and edl_ingest_time = ${edl_ingest_time||||string}$
+and not exists (select 1 from justin_northwind_raw.l_employee_privileges lep where lep.employee_privileges_key = upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''),regexp_replace(nvl(e.email_address,''), '"', ''),regexp_replace(nvl(p.privilege_name,''), '"', ''))));
+
 
 insert into table justin_northwind_raw.l_invoices
 select distinct
@@ -471,12 +513,13 @@ and not exists (select 1 from justin_northwind_raw.l_purchase_order_details wher
 insert into table justin_northwind_raw.r_purchase_order_status 
 select distinct
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,
+        null edl_source_file,
         id purchase_order_status_id,
         regexp_replace(status,'"','') status
 from justin_northwind_stg.stg_northwind_purchase_order_status spos
@@ -486,12 +529,13 @@ and edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table justin_northwind_raw.r_inventory_transaction_types 
 select distinct
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,
+        null edl_source_file,
         id inventory_transaction_type_id,
         regexp_replace(type_name,'"','') type_name
 from justin_northwind_stg.stg_northwind_inventory_transaction_types sitt
@@ -501,12 +545,13 @@ and edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table justin_northwind_raw.r_order_details_status 
 select distinct
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,
+        null edl_source_file,
         id order_details_status_id,
         regexp_replace(status_name,'"','') status_name
 from justin_northwind_stg.stg_northwind_order_details_status nods
@@ -516,12 +561,13 @@ and edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table justin_northwind_raw.r_orders_tax_status
 select distinct
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,
+        null edl_source_file,
         id order_tax_status_id,
         regexp_replace(tax_status_name,'"','') tax_status_name
 from justin_northwind_stg.stg_northwind_orders_tax_status sots
@@ -531,12 +577,13 @@ and edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table justin_northwind_raw.r_orders_status 
 select distinct
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,
+        null edl_source_file,
         id order_status_id,
         regexp_replace(status_name,'"','') status_name
 from justin_northwind_stg.stg_northwind_orders_status sos
@@ -546,12 +593,13 @@ and edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table justin_northwind_raw.r_sales_reports 
 select 
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,
+        null edl_source_file,
         regexp_replace(group_by,'"','') group_by,
         regexp_replace(display,'"','') display,
         regexp_replace(title,'"','') title,
@@ -570,12 +618,13 @@ and edl_ingest_time = ${edl_ingest_time||||string}$;
 insert into table justin_northwind_raw.r_strings 
 select
         current_timestamp load_dt,
-        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) mod_dt,
-        regexp_replace(dtl__capxaction,'"','') mod_type,
-        dtl__capxrowid mod_row_id,
+        concat(substring(dtl__capxtimestamp,2,4),'-',substring(dtl__capxtimestamp,6,2),'-',substring(dtl__capxtimestamp,8,2),' ',substring(dtl__capxtimestamp,10,2),':',substring(dtl__capxtimestamp,12,2),':',substring(dtl__capxtimestamp,14,2),'.',substring(dtl__capxtimestamp,16,6)) dtl__capxtimestamp,
+        regexp_replace(dtl__capxaction,'"','') dtl__capxaction,
+        dtl__capxrowid dtl__capxrowid,
         edl_ingest_channel,
         edl_ingest_time,
-        case when regexp_replace(dtl__capxaction,'"','') = 'D' then 1 else 0 end deleted,
+        null edl_soft_delete,
+        null edl_source_file,
         string_id,
         regexp_replace(string_data,'"','') string_data
 from justin_northwind_stg.stg_northwind_strings ss

@@ -11,8 +11,7 @@ drop table if exists h_products;
 drop table if exists h_purchase_order_details;
 drop table if exists h_purchase_orders;
 drop table if exists h_shippers;
-drop table if exists h_suppliers  ;
-drop table if exists lsat_employee_privileges;
+drop table if exists h_suppliers;
 drop table if exists l_invoices;
 drop table if exists l_orders;
 drop table if exists l_order_details;
@@ -36,6 +35,9 @@ drop table if exists s_purchase_orders;
 drop table if exists s_purchase_order_details;
 drop table if exists s_shippers;
 drop table if exists s_suppliers;
+drop table if exists h_employee_privileges;
+drop table if exists s_employee_privileges;
+drop table if exists l_employee_privileges;
 
 CREATE TABLE H_customers (
   customers_key STRING,
@@ -142,12 +144,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_customers (
   customers_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   last_name STRING,
   first_name STRING,
   email_address STRING,
@@ -171,12 +174,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_employees (
   employees_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   company STRING,
   last_name STRING,
   first_name STRING,
@@ -200,12 +204,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_shippers (
   shippers_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   last_name STRING,
   first_name STRING,
   email_address STRING,
@@ -229,12 +234,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_orders (
   orders_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   tax_status_id INT,
   status_id INT,
   order_date TIMESTAMP,
@@ -257,12 +263,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_order_details (
   order_details_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   quantity DECIMAL(18,4),
   unit_price DECIMAL(19,4),
   discount DOUBLE,
@@ -275,12 +282,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_products (
   products_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   product_code STRING,
   description STRING,
   standard_cost DECIMAL(19,4),
@@ -299,12 +307,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_suppliers (
   suppliers_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   last_name STRING,
   first_name STRING,
   email_address STRING,
@@ -328,12 +337,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_purchase_orders (
   purchase_orders_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   submitted_date TIMESTAMP,
   creation_date TIMESTAMP,
   status_id INT,
@@ -352,12 +362,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_purchase_order_details (
   purchase_order_details_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   quantity DECIMAL(18,4),
   unit_cost DECIMAL(19,4),
   date_received TIMESTAMP,
@@ -369,12 +380,13 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_inventory_transactions (
   inventory_transactions_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   transaction_type INT,
   transaction_created_date TIMESTAMP,
   transaction_modified_date TIMESTAMP,
@@ -387,33 +399,19 @@ tblproperties ("transactional"="true");
 CREATE TABLE S_invoices (
   invoices_key STRING,
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   invoice_date TIMESTAMP,
   due_date TIMESTAMP,
   tax DECIMAL(19,4),
   shipping DECIMAL(19,4),
   amount_due DECIMAL(19,4)) 
 clustered by (invoices_key) into 1 buckets
-stored as ORC
-tblproperties ("transactional"="true");
-
-CREATE TABLE LSAT_employee_privileges (
-  link_employee_privileges_key STRING,
-  employees_key STRING,
-  privileges_key STRING,
-  load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
-  edl_ingest_channel STRING,
-  edl_ingest_time STRING,
-  deleted BOOLEAN) 
-clustered by (link_employee_privileges_key) into 1 buckets
 stored as ORC
 tblproperties ("transactional"="true");
 
@@ -474,72 +472,78 @@ tblproperties ("transactional"="true");
   
 CREATE TABLE R_purchase_order_status (
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   purchase_order_status_id INT,
   status STRING) 
 stored as ORC;
 
 CREATE TABLE R_inventory_transaction_types (
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   inventory_transaction_type_id INT,
   type_name STRING) 
 stored as ORC;
 
 CREATE TABLE R_order_details_status (
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   order_details_status_id INT,
   status_name STRING) 
 stored as ORC;
 
 CREATE TABLE R_orders_tax_status (
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   order_tax_status_id INT,
   tax_status_name STRING) 
 stored as ORC;
 
 CREATE TABLE R_orders_status (
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   order_status_id INT,
   status_name STRING)
 stored as ORC;
 
 CREATE TABLE R_sales_reports (
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   group_by STRING,
   display STRING,
   title STRING,
@@ -549,12 +553,48 @@ stored as ORC;
 
 CREATE TABLE R_strings (
   load_dt TIMESTAMP,
-  mod_dt TIMESTAMP,
-  mod_type STRING,
-  mod_row_id INT,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
   edl_ingest_channel STRING,
   edl_ingest_time STRING,
-  deleted BOOLEAN,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING,
   string_id INT ,
   string_data STRING) 
 stored as ORC;
+
+CREATE TABLE H_employee_privileges (
+  employee_privileges_key STRING,
+  employees_key STRING,
+  privileges_key STRING,
+  load_dt TIMESTAMP) 
+clustered by (employee_privileges_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
+
+  
+CREATE TABLE L_employee_privileges (
+  link_employee_privileges_key STRING,
+  employee_privileges_key STRING,
+  employees_key STRING,
+  privileges_key STRING,
+  load_dt TIMESTAMP) 
+clustered by (link_employee_privileges_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
+
+  
+CREATE TABLE S_employee_privileges (
+  employee_privileges_key STRING,
+  load_dt TIMESTAMP,
+  dtl__capxtimestamp TIMESTAMP,
+  dtl__capxaction STRING,
+  dtl__capxrowid INT,
+  edl_ingest_channel STRING,
+  edl_ingest_time STRING,
+  edl_soft_delete BOOLEAN,
+  edl_source_file STRING) 
+clustered by (employee_privileges_key) into 1 buckets
+stored as ORC
+tblproperties ("transactional"="true");
