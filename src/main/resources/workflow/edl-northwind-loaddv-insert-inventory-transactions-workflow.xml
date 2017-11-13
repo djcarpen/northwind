@@ -17,7 +17,7 @@
   
   Workflow app = /user/admin/data_pipeline_demo/
 -->
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loadhub-insert-inventory-transactions-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-insert-inventory-transactions-workflow">
 
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -47,63 +47,63 @@
         </credential>
     </credentials>
 
-    <start to="edl-northwind-loadhub-inventory-transactions-forking"/>
+    <start to="edl-northwind-loaddv-inventory-transactions-forking"/>
 
-    <fork name="edl-northwind-loadhub-inventory-transactions-forking">
-        <path start="edl-northwind-loadhub-insert-h-inventory-transactions"/>
-        <path start="edl-northwind-loadhub-insert-s-inventory-transactions"/>
+    <fork name="edl-northwind-loaddv-inventory-transactions-forking">
+        <path start="edl-northwind-loaddv-insert-h-inventory-transactions"/>
+        <path start="edl-northwind-loaddv-insert-s-inventory-transactions"/>
     </fork>
 
-    <action name="edl-northwind-loadhub-insert-h-inventory-transactions" cred="hs2_credentials">
+    <action name="edl-northwind-loaddv-insert-h-inventory-transactions" cred="hs2_credentials">
         <hive2 xmlns="uri:oozie:hive2-action:0.1">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-h-inventory-transactions</value>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-h-inventory-transactions</value>
                 </property>
                 <property>
                     <name>mapred.job.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-h-inventory-transactions</value>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-h-inventory-transactions</value>
                 </property>
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/hub/dml/load_h_inventory_transactions.hql</script>
             <param>databaseName=${database}</param>
         </hive2>
-        <ok to="edl-northwind-loadhub-inventory-transactions-joining"/>
-        <error to="kill-edl-northwind-loadhub-insert-h-inventory-transactions"/>
+        <ok to="edl-northwind-loaddv-inventory-transactions-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-h-inventory-transactions"/>
     </action>
 
-    <kill name="kill-edl-northwind-loadhub-insert-h-inventory-transactions">
-        <message>Action failed running the insert hub inventory-transactions, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    <kill name="kill-edl-northwind-loaddv-insert-h-inventory-transactions">
+        <message>Action failed running the insert ${dataVaultType} h_inventory_transactions, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
-    <action name="edl-northwind-loadhub-insert-s-inventory-transactions" cred="hs2_credentials">
+    <action name="edl-northwind-loaddv-insert-s-inventory-transactions" cred="hs2_credentials">
         <hive2 xmlns="uri:oozie:hive2-action:0.1">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-s-inventory-transactions</value>
+                    <value>${executionId}-edl-northwind-loaddv-insert-s-inventory-transactions</value>
                 </property>
                 <property>
                     <name>mapred.job.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-s-inventory-transactions</value>
+                    <value>${executionId}-edl-northwind-loaddv-insert-s-inventory-transactions</value>
                 </property>
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/hub/dml/load_s_inventory_transactions.hql</script>
             <param>databaseName=${database}</param>
         </hive2>
-        <ok to="edl-northwind-loadhub-inventory-transactions-joining"/>
-        <error to="kill-edl-northwind-loadhub-insert-s-inventory-transactions"/>
+        <ok to="edl-northwind-loaddv-inventory-transactions-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-s-inventory-transactions"/>
     </action>
 
-    <kill name="kill-edl-northwind-loadhub-insert-s-inventory-transactions">
-        <message>Action failed running the insert satellite inventory-transactions, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    <kill name="kill-edl-northwind-loaddv-insert-s-inventory-transactions">
+        <message>Action failed running the insert ${dataVaultType} s_inventory_transactions, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
 
-    <join name="edl-northwind-loadhub-inventory-transactions-joining" to="end"/>
+    <join name="edl-northwind-loaddv-inventory-transactions-joining" to="end"/>
 
 
     <kill name="kill">

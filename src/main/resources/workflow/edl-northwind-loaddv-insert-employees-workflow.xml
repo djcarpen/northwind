@@ -17,7 +17,7 @@
   
   Workflow app = /user/admin/data_pipeline_demo/
 -->
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loadhub-insert-employees-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-insert-employees-workflow">
 
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -47,63 +47,63 @@
         </credential>
     </credentials>
 
-    <start to="edl-northwind-loadhub-employees-forking"/>
+    <start to="edl-northwind-loaddv-employees-forking"/>
 
-    <fork name="edl-northwind-loadhub-employees-forking">
-        <path start="edl-northwind-loadhub-insert-h-employees"/>
-        <path start="edl-northwind-loadhub-insert-s-employees"/>
+    <fork name="edl-northwind-loaddv-employees-forking">
+        <path start="edl-northwind-loaddv-insert-h-employees"/>
+        <path start="edl-northwind-loaddv-insert-s-employees"/>
     </fork>
 
-    <action name="edl-northwind-loadhub-insert-h-employees" cred="hs2_credentials">
+    <action name="edl-northwind-loaddv-insert-h-employees" cred="hs2_credentials">
         <hive2 xmlns="uri:oozie:hive2-action:0.1">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-h-employees</value>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-h-employees</value>
                 </property>
                 <property>
                     <name>mapred.job.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-h-employees</value>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-h-employees</value>
                 </property>
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
-            <script>${codeBaseDir}/hql/hub/dml/load_h_employees.hql</script>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_h_employees.hql</script>
             <param>databaseName=${database}</param>
         </hive2>
-        <ok to="edl-northwind-loadhub-employees-joining"/>
-        <error to="kill-edl-northwind-loadhub-insert-h-employees"/>
+        <ok to="edl-northwind-loaddv-employees-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-h-employees"/>
     </action>
 
-    <kill name="kill-edl-northwind-loadhub-insert-h-employees">
-        <message>Action failed running the insert hub employees, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    <kill name="kill-edl-northwind-loaddv-insert-h-employees">
+        <message>Action failed running the insert ${dataVaultType} h_employees, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
-    <action name="edl-northwind-loadhub-insert-s-employees" cred="hs2_credentials">
+    <action name="edl-northwind-loaddv-insert-s-employees" cred="hs2_credentials">
         <hive2 xmlns="uri:oozie:hive2-action:0.1">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-s-employees</value>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-s-employees</value>
                 </property>
                 <property>
                     <name>mapred.job.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-s-employees</value>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-s-employees</value>
                 </property>
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
-            <script>${codeBaseDir}/hql/hub/dml/load_s_employees.hql</script>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_s_employees.hql</script>
             <param>databaseName=${database}</param>
         </hive2>
-        <ok to="edl-northwind-loadhub-employees-joining"/>
-        <error to="kill-edl-northwind-loadhub-insert-s-employees"/>
+        <ok to="edl-northwind-loaddv-employees-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-s-employees"/>
     </action>
 
-    <kill name="kill-edl-northwind-loadhub-insert-s-employees">
-        <message>Action failed running the insert satellite employees, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    <kill name="kill-edl-northwind-loaddv-insert-s-employees">
+        <message>Action failed running the insert ${dataVaultType} s_employees, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
 
-    <join name="edl-northwind-loadhub-employees-joining" to="end"/>
+    <join name="edl-northwind-loaddv-employees-joining" to="end"/>
 
 
     <kill name="kill">
