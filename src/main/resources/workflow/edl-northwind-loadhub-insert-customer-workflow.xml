@@ -17,7 +17,7 @@
   
   Workflow app = /user/admin/data_pipeline_demo/
 -->
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loadhub-insert-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loadhub-insert-customers-workflow">
 
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -59,11 +59,11 @@
       </credential>
    </credentials>
 
-    <start to="edl-northwind-loadhub_forking"/>
+    <start to="edl-northwind-loadhub-customers-forking"/>
 
-    <fork name="edl-northwind-loadhub_forking">
-        <path start="edl-northwind-loadhub-insert-customers"/>
-        <path start="secondparalleljob"/>
+    <fork name="edl-northwind-loadhub-customers-forking">
+        <path start="edl-northwind-loadhub-insert-h-customers"/>
+        <path start="edl-northwind-loadhub-insert-s-customers"/>
     </fork>
 
     <action name="edl-northwind-loadhub-insert-h-customers" cred="hs2_credentials">
@@ -82,7 +82,7 @@
         	 <script>${codeBaseDir}/hql/hub/dml/load_h_customers.hql</script>
        	     <param>databaseName=${database}</param>
       </hive2>
-      <ok to="edl-northwind-loadhub-insert-h-customers"/>
+      <ok to="edl-northwind-loadhub-customers-joining"/>
       <error to="kill-edl-northwind-loadhub-insert-h-customers"/>
     </action>
 
@@ -90,33 +90,38 @@
         <message>Action failed running the insert hub customers, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
-    <action name="edl-northwind-loadhub-insert-h-employee-privileges" cred="hs2_credentials">
+    <action name="edl-northwind-loadhub-insert-s-customers" cred="hs2_credentials">
         <hive2 xmlns="uri:oozie:hive2-action:0.1">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-h-employee-privileges</value>
+                    <value>${executionId}-edl-northwind-loadhub-insert-s-customers</value>
                 </property>
                 <property>
                     <name>mapred.job.name</name>
-                    <value>${executionId}-edl-northwind-loadhub-insert-h-employee-privileges</value>
+                    <value>${executionId}-edl-northwind-loadhub-insert-s-customers</value>
                 </property>
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
-            <script>${codeBaseDir}/hql/hub/dml/load_h_employee_privileges.hql</script>
+            <script>${codeBaseDir}/hql/hub/dml/load_s_customers.hql</script>
             <param>databaseName=${database}</param>
         </hive2>
-        <ok to="edl-northwind-loadhub-insert-h-employee-privileges"/>
-        <error to="kill-edl-northwind-loadhub-insert-h-employee-privileges"/>
+        <ok to="edl-northwind-loadhub-customers-joining"/>
+        <error to="kill-edl-northwind-loadhub-insert-s-customers"/>
     </action>
 
-    <kill name="kill-edl-northwind-loadhub-insert-h-employee-privileges">
-        <message>Action failed running the insert hub employee privileges, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    <kill name="kill-edl-northwind-loadhub-insert-s-customers">
+        <message>Action failed running the insert satellite customers, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
+
+
+    <join name="edl-northwind-loadhub-customers-joining" to="end"/>
     
 
     <kill name="kill">
         <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
+
     <end name="end"/>
+
 </workflow-app>
