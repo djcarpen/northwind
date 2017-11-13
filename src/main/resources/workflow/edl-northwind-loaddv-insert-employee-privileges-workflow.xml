@@ -50,7 +50,8 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_h_employee_privileges.hql</script>
-            <param>databaseName=${database}</param>
+             <param>sourceDbName=${sourceDbName}</param>
+             <param>targetDbName=${targetDbName}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-employee-privileges-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-h-employee-privileges"/>
@@ -74,7 +75,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_s_employee_privileges.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-employee-privileges-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-s-employee-privileges"/>
@@ -98,7 +102,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_l_employee_privileges.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-employee-privileges-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-l-employee-privileges"/>

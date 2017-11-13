@@ -49,7 +49,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/hub/dml/load_h_inventory_transactions.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-inventory-transactions-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-h-inventory-transactions"/>
@@ -73,7 +76,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/hub/dml/load_s_inventory_transactions.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-inventory-transactions-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-s-inventory-transactions"/>

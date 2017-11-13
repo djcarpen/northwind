@@ -50,7 +50,10 @@
             </configuration>
         	 <jdbc-url>${jdbcURL}</jdbc-url>
         	 <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_h_orders.hql</script>
-       	     <param>databaseName=${database}</param>
+             <param>sourceDbName=${sourceDbName}</param>
+             <param>targetDbName=${targetDbName}</param>
+             <param>edlIngestTime=${edlIngestTime}</param>
+             <param>edlIngestChannel=${edlIngestChannel}</param>
       </hive2>
       <ok to="edl-northwind-loaddv-orders-joining"/>
       <error to="kill-edl-northwind-loaddv-insert-h-orders"/>
@@ -74,7 +77,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_s_orders.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-orders-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-s-orders"/>
@@ -98,7 +104,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_l_orders.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-orders-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-l-orders"/>

@@ -50,7 +50,10 @@
             </configuration>
         	 <jdbc-url>${jdbcURL}</jdbc-url>
         	 <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_h_purchase_order_details.hql</script>
-       	     <param>databaseName=${database}</param>
+             <param>sourceDbName=${sourceDbName}</param>
+             <param>targetDbName=${targetDbName}</param>
+             <param>edlIngestTime=${edlIngestTime}</param>
+             <param>edlIngestChannel=${edlIngestChannel}</param>
       </hive2>
       <ok to="edl-northwind-loaddv-purchase-order-details-joining"/>
       <error to="kill-edl-northwind-loaddv-insert-h-purchase-order-details"/>
@@ -74,7 +77,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_s_purchase_order_details.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-purchase-order-details-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-s-purchase-order-details"/>
@@ -98,7 +104,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_l_purchase_order_details.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-purchase-order-details-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-l-purchase-order-details"/>

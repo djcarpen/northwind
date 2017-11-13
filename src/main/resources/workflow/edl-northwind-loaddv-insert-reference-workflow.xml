@@ -54,7 +54,10 @@
             </configuration>
         	 <jdbc-url>${jdbcURL}</jdbc-url>
         	 <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_inventory_transaction_types.hql</script>
-       	     <param>databaseName=${database}</param>
+         <param>sourceDbName=${sourceDbName}</param>
+         <param>targetDbName=${targetDbName}</param>
+         <param>edlIngestTime=${edlIngestTime}</param>
+         <param>edlIngestChannel=${edlIngestChannel}</param>
       </hive2>
       <ok to="edl-northwind-loaddv-reference-joining"/>
       <error to="kill-edl-northwind-loaddv-insert-r-inventory-transaction-types"/>
@@ -78,7 +81,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_order_details_status.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-reference-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-r-order-details-status"/>
@@ -102,7 +108,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_order_tax_status.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-reference-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-r-order-tax-status"/>
@@ -126,7 +135,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_order_status.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-reference-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-r-order-status"/>
@@ -150,7 +162,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_purchase_order_status.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-reference-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-r-purchase-order-status"/>
@@ -174,7 +189,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_sales_report.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-reference-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-r-sales-report"/>
@@ -198,7 +216,10 @@
             </configuration>
             <jdbc-url>${jdbcURL}</jdbc-url>
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_strings.hql</script>
-            <param>databaseName=${database}</param>
+            <param>sourceDbName=${sourceDbName}</param>
+            <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-reference-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-r-strings"/>
