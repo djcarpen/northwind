@@ -1,0 +1,220 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-insert-reference-workflow">
+
+    <global>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>tez.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>mapreduce.job.queuename</name>
+                <value>${queueName}</value>
+            </property>
+        </configuration>
+    </global>
+    
+ <credentials>
+      <credential name="hs2_credentials" type="hive2">
+         <property>
+            <name>hive2.server.principal</name>
+            <value>${jdbcPrincipal}</value>
+         </property>
+         <property>
+            <name>hive2.jdbc.url</name>
+            <value>${jdbcURL}</value>
+         </property>
+      </credential>
+   </credentials>
+
+    <start to="edl-northwind-loaddv-reference-forking"/>
+
+    <fork name="edl-northwind-loaddv-reference-forking">
+        <path start="edl-northwind-loaddv-insert-r-inventory-transaction-types"/>
+        <path start="edl-northwind-loaddv-insert-r-order-details-status"/>
+        <path start="edl-northwind-loaddv-insert-r-order-status"/>
+        <path start="edl-northwind-loaddv-insert-r-order-tax-status"/>
+        <path start="edl-northwind-loaddv-insert-r-purchase-order-status"/>
+        <path start="edl-northwind-loaddv-insert-r-sales-reports"/>
+        <path start="edl-northwind-loaddv-insert-r-strings"/>
+    </fork>
+
+    <action name="edl-northwind-loaddv-insert-r-inventory-transaction-types" cred="hs2_credentials">
+     <hive2 xmlns="uri:oozie:hive2-action:0.1">
+     		<configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-inventory-transaction-types</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-inventory-transaction-types</value>
+                </property>
+            </configuration>
+        	 <jdbc-url>${jdbcURL}</jdbc-url>
+        	 <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_inventory_transaction_types.hql</script>
+       	     <param>databaseName=${database}</param>
+      </hive2>
+      <ok to="edl-northwind-loaddv-reference-joining"/>
+      <error to="kill-edl-northwind-loaddv-insert-r-inventory-transaction-types"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-r-inventory-transaction-types">
+        <message>Action failed running the insert ${dataVaultType} r_inventory_transaction_types, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-r-order-details-status" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-order-details-status</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-order-details-status</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_order_details_status.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-reference-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-r-order-details-status"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-r-order-details-status">
+        <message>Action failed running the insert ${dataVaultType} r_order_details_status, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-r-order-tax-status" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-order-tax-status</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-order-tax-status</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_order_tax_status.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-reference-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-r-order-tax-status"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-r-order-tax-status">
+        <message>Action failed running the insert ${dataVaultType} r_order_tax_status, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-r-order-status" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-order-status</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-order-status</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_order_status.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-reference-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-r-order-status"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-r-order-status">
+        <message>Action failed running the insert ${dataVaultType} r_order_status, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-r-purchase-order-status" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-purchase-order-status</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-purchase-order-status</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_purchase_order_status.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-reference-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-r-purchase-order-status"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-r-purchase-order-status">
+        <message>Action failed running the insert ${dataVaultType} r_purchase_order_status, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-r-sales-report" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-sales-report</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-sales-report</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_sales_report.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-reference-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-r-sales-report"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-r-sales-report">
+        <message>Action failed running the insert ${dataVaultType} r_sales_report, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-r-strings" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-strings</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-r-strings</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_r_strings.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-reference-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-r-strings"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-r-strings">
+        <message>Action failed running the insert ${dataVaultType} r_strings, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <join name="edl-northwind-loaddv-reference-joining" to="end"/>
+    
+
+    <kill name="kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <end name="end"/>
+
+</workflow-app>
