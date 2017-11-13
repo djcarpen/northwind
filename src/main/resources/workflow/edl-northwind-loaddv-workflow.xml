@@ -13,7 +13,21 @@
 		</credential>
 	</credentials>
 
-	<start to="edl-northwind-loaddv-insert-customers"/>
+	<fork name="edl-northwind-loaddv-forking">
+		<path start="edl-northwind-loaddv-insert-customers"/>
+		<path start="edl-northwind-loaddv-insert-employee-privileges"/>
+		<path start="edl-northwind-loaddv-insert-employees"/>
+		<path start="edl-northwind-loaddv-insert-inventory_transactions"/>
+		<path start="edl-northwind-loaddv-insert-invoices"/>
+		<path start="edl-northwind-loaddv-insert-orders"/>
+		<path start="edl-northwind-loaddv-insert-order-details"/>
+		<path start="edl-northwind-loaddv-insert-products"/>
+		<path start="edl-northwind-loaddv-insert-purchase-order-details"/>
+		<path start="edl-northwind-loaddv-insert-purchase-orders"/>
+		<path start="edl-northwind-loaddv-insert-reference"/>
+		<path start="edl-northwind-loaddv-insert-shippers"/>
+		<path start="edl-northwind-loaddv-insert-suppliers"/>
+	</fork>
 
 	<action name="edl-northwind-loaddv-insert-customers">
 		<sub-workflow>
@@ -34,13 +48,342 @@
 				</property>
 			</configuration>
 		</sub-workflow>
-		<ok to="end"/>
-		<error to="kill-edl-northwind-loaddv-customer-insert"/>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-customers"/>
 	</action>
 
-	<kill name="kill-edl-northwind-loaddv-customer-insert">
+	<kill name="kill-edl-northwind-loaddv-insert-customers">
 		<message>Action failed executing inserts into ${dataVaultType} customers, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
 	</kill>
+
+	<action name="edl-northwind-loaddv-insert-employee-privileges">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-employee-privileges-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-employee-privileges"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-employee-privileges">
+		<message>Action failed executing inserts into ${dataVaultType} employee-privileges, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<action name="edl-northwind-loaddv-insert-employees">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-employees-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-employees"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-employees">
+		<message>Action failed executing inserts into ${dataVaultType} employees, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+
+	<action name="edl-northwind-loaddv-insert-inventory-transactions">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-inventory-transactions-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-inventory-transactions"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-inventory-transactions">
+		<message>Action failed executing inserts into ${dataVaultType} inventory-transactions, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+
+	<action name="edl-northwind-loaddv-insert-invoices">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-invoices-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-invoices"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-invoices">
+		<message>Action failed executing inserts into ${dataVaultType} invoices, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+
+	<action name="edl-northwind-loaddv-insert-orders">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-orders-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-orders"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-orders">
+		<message>Action failed executing inserts into ${dataVaultType} orders, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<action name="edl-northwind-loaddv-insert-order-details">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-order-details-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-order-details"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-order-details">
+		<message>Action failed executing inserts into ${dataVaultType} order-details, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<action name="edl-northwind-loaddv-insert-products">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-products-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-products"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-products">
+		<message>Action failed executing inserts into ${dataVaultType} products, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<action name="edl-northwind-loaddv-insert-purchase-order-details">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-purchase-order-details-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-purchase-order-details"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-purchase-order-details">
+		<message>Action failed executing inserts into ${dataVaultType} purchase-order-details, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<action name="edl-northwind-loaddv-insert-purchase-orders">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-purchase-orders-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-purchase-orders"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-purchase-orders">
+		<message>Action failed executing inserts into ${dataVaultType} purchase-orders, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<action name="edl-northwind-loaddv-insert-reference">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-reference-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-reference"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-reference">
+		<message>Action failed executing inserts into ${dataVaultType} reference tables, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<action name="edl-northwind-loaddv-insert-shippers">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-shippers-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-shippers"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-products">
+		<message>Action failed executing inserts into ${dataVaultType} shippers, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<action name="edl-northwind-loaddv-insert-suppliers">
+		<sub-workflow>
+			<app-path>${codeBaseDir}/workflow/edl-northwind-loaddv-insert-suppliers-workflow.xml</app-path>
+			<propagate-configuration/>
+			<configuration>
+				<property>
+					<name>tez.queue.name</name>
+					<value>${queueName}</value>
+				</property>
+				<property>
+					<name>oozie.hive.log.level</name>
+					<value>DEBUG</value>
+				</property>
+				<property>
+					<name>oozie.action.external.stats.write</name>
+					<value>true</value>
+				</property>
+			</configuration>
+		</sub-workflow>
+		<ok to="edl-northwind-loaddv-joining"/>
+		<error to="kill-edl-northwind-loaddv-insert-suppliers"/>
+	</action>
+
+	<kill name="kill-edl-northwind-loaddv-insert-suppliers">
+		<message>Action failed executing inserts into ${dataVaultType} suppliers, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+	</kill>
+
+	<join name="edl-northwind-loaddv-joining" to="end"/>
 
 	<kill name="kill">
 		<message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
