@@ -113,7 +113,7 @@
         <error to="kill-edl-northwind-loaddv-insert-l-orders"/>
     </action>
 
-    <kill name="kill-edl-northwind-loaddv-insert-s-orders">
+    <kill name="kill-edl-northwind-loaddv-insert-l-orders">
         <message>Action failed running the insert ${dataVaultType} l_orders, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 

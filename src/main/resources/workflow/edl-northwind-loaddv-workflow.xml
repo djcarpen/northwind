@@ -13,11 +13,13 @@
 		</credential>
 	</credentials>
 
+	<start to="edl-northwind-loaddv-forking"/>
+
 	<fork name="edl-northwind-loaddv-forking">
 		<path start="edl-northwind-loaddv-insert-customers"/>
 		<path start="edl-northwind-loaddv-insert-employee-privileges"/>
 		<path start="edl-northwind-loaddv-insert-employees"/>
-		<path start="edl-northwind-loaddv-insert-inventory_transactions"/>
+		<path start="edl-northwind-loaddv-insert-inventory-transactions"/>
 		<path start="edl-northwind-loaddv-insert-invoices"/>
 		<path start="edl-northwind-loaddv-insert-orders"/>
 		<path start="edl-northwind-loaddv-insert-order-details"/>
@@ -352,7 +354,7 @@
 		<error to="kill-edl-northwind-loaddv-insert-shippers"/>
 	</action>
 
-	<kill name="kill-edl-northwind-loaddv-insert-products">
+	<kill name="kill-edl-northwind-loaddv-insert-shippers">
 		<message>Action failed executing inserts into ${dataVaultType} shippers, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
 	</kill>
 
