@@ -15,4 +15,4 @@ select
         status_id,
         date_allocated
 from ${hivevar:sourceDbName}.stg_northwind_order_details
-where edl_ingest_time = ${hivevar:edlIngestTime};
+where edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

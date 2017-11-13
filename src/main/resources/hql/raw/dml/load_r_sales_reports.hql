@@ -21,4 +21,4 @@ where not exists (
                 and regexp_replace(ssr.title,'"','') = rsr.title
                 and regexp_replace(ssr.filter_row_source,'"','') = rsr.filter_row_source
                 and ssr.`default` = rsr.`default`)
-and edl_ingest_time = ${hivevar:edlIngestTime};
+and edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

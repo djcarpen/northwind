@@ -6,4 +6,4 @@ select distinct
         current_timestamp 
 from ${hivevar:sourceDbName}.stg_northwind_customers sc
 where not exists (select 1 from ${hivevar:targetDbName}.h_customers hc where upper(concat_ws("-",regexp_replace(sc.last_name, '"', ''), regexp_replace(sc.first_name, '"', ''), regexp_replace(sc.company, '"', ''))) = hc.customers_key)
-and edl_ingest_time = ${hivevar:edlIngestTime};
+and edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

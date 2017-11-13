@@ -26,4 +26,4 @@ select
         regexp_replace(notes, '"', ''),
         regexp_replace(attachments, '"', '') 
 from ${hivevar:sourceDbName}.stg_northwind_shippers
-where edl_ingest_time = ${hivevar:edlIngestTime};
+where edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

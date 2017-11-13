@@ -12,4 +12,4 @@ select
         regexp_replace(string_data,'"','') string_data
 from ${hivevar:sourceDbName}.stg_northwind_strings ss
 where not exists (select 1 from ${hivevar:targetDbName}.r_strings rs where ss.string_id = rs.string_id)
-and edl_ingest_time = ${hivevar:edlIngestTime};
+and edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

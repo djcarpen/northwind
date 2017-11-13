@@ -12,4 +12,4 @@ select distinct
         regexp_replace(tax_status_name,'"','') tax_status_name
 from ${hivevar:sourceDbName}.stg_northwind_orders_tax_status sots
 where not exists (select 1 from ${hivevar:targetDbName}.r_orders_tax_status rots where sots.id = rots.order_tax_status_id)
-and edl_ingest_time = ${hivevar:edlIngestTime};
+and edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

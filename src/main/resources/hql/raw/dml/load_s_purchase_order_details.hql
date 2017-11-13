@@ -14,4 +14,4 @@ select
         date_received,
         posted_to_inventory
 FROM ${hivevar:sourceDbName}.stg_northwind_purchase_order_details
-where edl_ingest_time = ${hivevar:edlIngestTime};
+where edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

@@ -21,4 +21,4 @@ SELECT
         trim(regexp_replace(notes,'"','')) notes,
         approved_date
 FROM ${hivevar:sourceDbName}.stg_northwind_purchase_orders
-where edl_ingest_time = ${hivevar:edlIngestTime};
+where edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

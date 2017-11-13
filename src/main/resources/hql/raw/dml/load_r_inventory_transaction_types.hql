@@ -12,4 +12,4 @@ select distinct
         regexp_replace(type_name,'"','') type_name
 from ${hivevar:sourceDbName}.stg_northwind_inventory_transaction_types sitt
 where not exists (select 1 from ${hivevar:targetDbName}.r_inventory_transaction_types ritt where sitt.id = ritt.inventory_transaction_type_id)
-and edl_ingest_time = ${hivevar:edlIngestTime};
+and edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};

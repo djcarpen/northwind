@@ -26,4 +26,4 @@ SELECT
         trim(regexp_replace(notes,'"','')) notes,
         trim(regexp_replace(attachments,'"','')) attachments
 FROM ${hivevar:sourceDbName}.stg_northwind_suppliers
-where edl_ingest_time = ${hivevar:edlIngestTime};
+where edl_ingest_time >= ${hivevar:edlIngestTime} and edl_ingest_channel = ${hivevar:edlIngestChannel};
