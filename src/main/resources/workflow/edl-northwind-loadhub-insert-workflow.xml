@@ -17,7 +17,7 @@
   
   Workflow app = /user/admin/data_pipeline_demo/
 -->
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loadstaging-insert-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loadhub-insert-workflow">
 
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -59,55 +59,61 @@
       </credential>
    </credentials>
 
-    <start to="edl-northwind-loadrdv-createddls"/>
+    <start to="edl-northwind-loadhub_forking"/>
 
-    <action name="edl-northwind-loadrdv-createddls" cred="hs2_credentials">
+    <fork name="edl-northwind-loadhub_forking">
+        <path start="edl-northwind-loadhub-insert-customers"/>
+        <path start="secondparalleljob"/>
+    </fork>
+
+    <action name="edl-northwind-loadhub-insert-h-customers" cred="hs2_credentials">
      <hive2 xmlns="uri:oozie:hive2-action:0.1">
      		<configuration>
                 <property>
                     <name>hive.query.name</name>
-                    <value>${executionId}-edl-northwind-loadstaging-createddls</value>
+                    <value>${executionId}-edl-northwind-loadhub-insert-h-customers</value>
                 </property>
                 <property>
                     <name>mapred.job.name</name>
-                    <value>${executionId}-edl-northwind-loadstaging-createddls</value>
+                    <value>${executionId}-edl-northwind-loadhub-insert-h-customers</value>
                 </property>
             </configuration>
         	 <jdbc-url>${jdbcURL}</jdbc-url>
-        	 <script>${codeBaseDir}/hql/</script>
+        	 <script>${codeBaseDir}/hql/hub/dml/load_h_customers.hql</script>
        	     <param>databaseName=${database}</param>
       </hive2>
-      <ok to="edl-northwind-loadrdv-insert"/>
-      <error to="kill-edl-northwind-loadsrdv-createddls"/>
+      <ok to="edl-northwind-loadhub-insert-h-customers"/>
+      <error to="kill-edl-northwind-loadhub-insert-h-customers"/>
     </action>
 
-    <kill name="kill-edl-northwind-loadrdv-createddls">
-        <message>Action failed running the creating ddls, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    <kill name="kill-edl-northwind-loadhub-insert-h-customers">
+        <message>Action failed running the insert hub customers, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loadhub-insert-h-employee-privileges" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-loadhub-insert-h-employee-privileges</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-loadhub-insert-h-employee-privileges</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/hub/dml/load_h_employee_privileges.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loadhub-insert-h-employee-privileges"/>
+        <error to="kill-edl-northwind-loadhub-insert-h-employee-privileges"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loadhub-insert-h-employee-privileges">
+        <message>Action failed running the insert hub employee privileges, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
     
-    <action name="edl-northwind-loadrdv-insert" cred="hs2_credentials">
-     <hive2 xmlns="uri:oozie:hive2-action:0.1">
-     		<configuration>
-                <property>
-                    <name>hive.query.name</name>
-                    <value>${executionId}-edl-northwind-loadrdv-insert</value>
-                </property>
-                <property>
-                    <name>mapred.job.name</name>
-                    <value>${executionId}-edl-northwind-loadrdv-insert</value>
-                </property>
-            </configuration>
-        	 <jdbc-url>${jdbcURL}</jdbc-url>
-        	 <script>${codeBaseDir}/hql/load_northwinds_rdv.hql</script>
-       	     <param>databaseName=${database}</param>
-      </hive2>
-      <ok to="end"/>
-      <error to="kill-edl-northwind-loadrdv-insert"/>
-    </action>
-
-    <kill name="kill-edl-northwind-loadrdv-insert">
-        <message>Action failed running the inserts into RDV, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
-    </kill>
 
     <kill name="kill">
         <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
