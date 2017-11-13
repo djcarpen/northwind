@@ -1,0 +1,96 @@
+<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-insert-order-details-workflow">
+
+    <global>
+        <job-tracker>${jobTracker}</job-tracker>
+        <name-node>${nameNode}</name-node>
+        <configuration>
+            <property>
+                <name>tez.queue.name</name>
+                <value>${queueName}</value>
+            </property>
+            <property>
+                <name>mapreduce.job.queuename</name>
+                <value>${queueName}</value>
+            </property>
+        </configuration>
+    </global>
+    
+ <credentials>
+      <credential name="hs2_credentials" type="hive2">
+         <property>
+            <name>hive2.server.principal</name>
+            <value>${jdbcPrincipal}</value>
+         </property>
+         <property>
+            <name>hive2.jdbc.url</name>
+            <value>${jdbcURL}</value>
+         </property>
+      </credential>
+   </credentials>
+
+    <start to="edl-northwind-loaddv-order-details-forking"/>
+
+    <fork name="edl-northwind-loaddv-order-details-forking">
+        <path start="edl-northwind-loaddv-insert-h-order-details"/>
+        <path start="edl-northwind-loaddv-insert-s-order-details"/>
+    </fork>
+
+    <action name="edl-northwind-loaddv-insert-h-order-details" cred="hs2_credentials">
+     <hive2 xmlns="uri:oozie:hive2-action:0.1">
+     		<configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-h-order-details</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-h-order-details</value>
+                </property>
+            </configuration>
+        	 <jdbc-url>${jdbcURL}</jdbc-url>
+        	 <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_h_order_details.hql</script>
+       	     <param>databaseName=${database}</param>
+      </hive2>
+      <ok to="edl-northwind-loaddv-order-details-joining"/>
+      <error to="kill-edl-northwind-loaddv-insert-h-order-details"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-h-order-details">
+        <message>Action failed running the insert ${dataVaultType} h_order_details, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-s-order-details" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-s-order-details</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-s-order-details</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_s_order_details.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-order-details-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-s-order-details"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-s-order-details">
+        <message>Action failed running the insert ${dataVaultType} s_order_details, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+
+    <join name="edl-northwind-loaddv-order-details-joining" to="end"/>
+    
+
+    <kill name="kill">
+        <message>Action failed, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <end name="end"/>
+
+</workflow-app>

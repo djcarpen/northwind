@@ -31,18 +31,6 @@
                 <name>mapreduce.job.queuename</name>
                 <value>${queueName}</value>
             </property>
-           <!-- <property>
-                <name>oozie.launcher.mapreduce.map.memory.mb</name>
-                <value>${mapMemoryMb}</value>
-            </property>
-            <property>
-                <name>oozie.launcher.mapreduce.map.java.opts</name>
-                <value>${mapJavaOpts}</value>
-            </property>
-            <property>
-                <name>oozie.launcher.yarn.app.mapreduce.am.resource.mb</name>
-                <value>${mapResourceMb}</value>
-            </property>-->
         </configuration>
     </global>
     
