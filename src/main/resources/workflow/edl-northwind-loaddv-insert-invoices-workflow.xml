@@ -33,6 +33,7 @@
     <fork name="edl-northwind-loaddv-invoices-forking">
         <path start="edl-northwind-loaddv-insert-h-invoices"/>
         <path start="edl-northwind-loaddv-insert-s-invoices"/>
+        <path start="edl-northwind-loaddv-insert-l-invoices"/>
     </fork>
 
     <action name="edl-northwind-loaddv-insert-h-invoices" cred="hs2_credentials">
@@ -81,6 +82,30 @@
 
     <kill name="kill-edl-northwind-loaddv-insert-s-invoices">
         <message>Action failed running the insert ${dataVaultType} s_invoices, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-l-invoices" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-l-invoices</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-l-invoices</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_l_invoices.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-invoices-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-l-invoices"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-l-invoices">
+        <message>Action failed running the insert ${dataVaultType} l_invoices, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
 

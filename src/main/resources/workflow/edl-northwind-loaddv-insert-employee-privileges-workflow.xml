@@ -33,6 +33,7 @@
     <fork name="edl-northwind-loaddv-employee-privileges-forking">
         <path start="edl-northwind-loaddv-insert-h-employee-privileges"/>
         <path start="edl-northwind-loaddv-insert-s-employee-privileges"/>
+        <path start="edl-northwind-loaddv-insert-l-employee-privileges"/>
     </fork>
 
     <action name="edl-northwind-loaddv-insert-h-employee-privileges" cred="hs2_credentials">
@@ -82,6 +83,31 @@
     <kill name="kill-edl-northwind-loaddv-insert-s-employee-privileges">
         <message>Action failed running the insert ${dataVaultType} s_employee-privileges, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
+
+    <action name="edl-northwind-loaddv-insert-l-employee-privileges" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-l-employee-privileges</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-l-employee-privileges</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_l_employee_privileges.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-employee-privileges-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-l-employee-privileges"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-l-employee-privileges">
+        <message>Action failed running the insert ${dataVaultType} l_employee_privileges, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
 
 
     <join name="edl-northwind-loaddv-employee-privileges-joining" to="end"/>

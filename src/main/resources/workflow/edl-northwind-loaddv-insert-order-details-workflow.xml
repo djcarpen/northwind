@@ -33,6 +33,7 @@
     <fork name="edl-northwind-loaddv-order-details-forking">
         <path start="edl-northwind-loaddv-insert-h-order-details"/>
         <path start="edl-northwind-loaddv-insert-s-order-details"/>
+        <path start="edl-northwind-loaddv-insert-l-order-details"/>
     </fork>
 
     <action name="edl-northwind-loaddv-insert-h-order-details" cred="hs2_credentials">
@@ -81,6 +82,30 @@
 
     <kill name="kill-edl-northwind-loaddv-insert-s-order-details">
         <message>Action failed running the insert ${dataVaultType} s_order_details, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
+    </kill>
+
+    <action name="edl-northwind-loaddv-insert-l-order-details" cred="hs2_credentials">
+        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+            <configuration>
+                <property>
+                    <name>hive.query.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-l-order-details</value>
+                </property>
+                <property>
+                    <name>mapred.job.name</name>
+                    <value>${executionId}-edl-northwind-load${dataVaultType}-insert-l-order-details</value>
+                </property>
+            </configuration>
+            <jdbc-url>${jdbcURL}</jdbc-url>
+            <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_l_order_details.hql</script>
+            <param>databaseName=${database}</param>
+        </hive2>
+        <ok to="edl-northwind-loaddv-order-details-joining"/>
+        <error to="kill-edl-northwind-loaddv-insert-l-order-details"/>
+    </action>
+
+    <kill name="kill-edl-northwind-loaddv-insert-s-order-details">
+        <message>Action failed running the insert ${dataVaultType} l_order_details, error message[${wf:errorMessage(wf:lastErrorNode())}]</message>
     </kill>
 
 
