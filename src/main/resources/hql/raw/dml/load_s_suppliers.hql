@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).s_suppliers
+insert into table ${hivevar:targetDbName}.s_suppliers
 SELECT
         upper(concat_ws("-",cast(id as string), trim(regexp_replace(company,'"','')))) suppliers_key,
         current_timestamp load_dt,
@@ -25,5 +25,5 @@ SELECT
         trim(regexp_replace(web_page,'"','')) web_page,
         trim(regexp_replace(notes,'"','')) notes,
         trim(regexp_replace(attachments,'"','')) attachments
-FROM $(hivevar:sourceDbName).stg_northwind_suppliers
-where edl_ingest_time = $(hivevar:edlIngestTime);
+FROM ${hivevar:sourceDbName}.stg_northwind_suppliers
+where edl_ingest_time = ${hivevar:edlIngestTime};

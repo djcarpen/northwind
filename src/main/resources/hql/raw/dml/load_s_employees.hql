@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).s_employees
+insert into table ${hivevar:targetDbName}.s_employees
 select
         upper(regexp_replace(email_address, '"', '')),
         current_timestamp load_dt,
@@ -25,5 +25,5 @@ select
         regexp_replace(web_page, '"', ''),
         regexp_replace(notes, '"', ''),
         regexp_replace(attachments, '"', '') 
-from $(hivevar:sourceDbName).stg_northwind_employees
-where edl_ingest_time = $(hivevar:edlIngestTime);
+from ${hivevar:sourceDbName}.stg_northwind_employees
+where edl_ingest_time = ${hivevar:edlIngestTime};

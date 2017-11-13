@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).s_invoices
+insert into table ${hivevar:targetDbName}.s_invoices
 select
         upper(cast(id as string)) invoices_key,
         current_timestamp load_dt,
@@ -14,5 +14,5 @@ select
         tax,
         shipping,
         amount_due
-from $(hivevar:sourceDbName).stg_northwind_invoices
-where edl_ingest_time = $(hivevar:edlIngestTime);
+from ${hivevar:sourceDbName}.stg_northwind_invoices
+where edl_ingest_time = ${hivevar:edlIngestTime};

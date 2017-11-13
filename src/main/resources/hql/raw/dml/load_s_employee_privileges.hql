@@ -1,4 +1,4 @@
-insert into $(hivevar:targetDbName).s_employee_privileges 
+insert into ${hivevar:targetDbName}.s_employee_privileges 
 select distinct
         upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))) employee_privileges_key,
         current_timestamp load_dt,
@@ -9,10 +9,10 @@ select distinct
         edl_ingest_time,
         null edl_soft_delete,         
         null edl_source_file
-from $(hivevar:sourceDbName).stg_northwind_employee_privileges ep
-join (select distinct id, email_address from $(hivevar:sourceDbName).stg_northwind_employees) e on ep.employee_id = e.id
-join (select distinct id, privilege_name from $(hivevar:sourceDbName).stg_northwind_privileges) p on ep.privilege_id = p.id
+from ${hivevar:sourceDbName}.stg_northwind_employee_privileges ep
+join (select distinct id, email_address from ${hivevar:sourceDbName}.stg_northwind_employees) e on ep.employee_id = e.id
+join (select distinct id, privilege_name from ${hivevar:sourceDbName}.stg_northwind_privileges) p on ep.privilege_id = p.id
 where 1=1
-and edl_ingest_time = $(hivevar:edlIngestTime)
-and not exists (select 1 from $(hivevar:targetDbName).s_employee_privileges sep where sep.employee_privileges_key = upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))));
+and edl_ingest_time = ${hivevar:edlIngestTime}
+and not exists (select 1 from ${hivevar:targetDbName}.s_employee_privileges sep where sep.employee_privileges_key = upper(concat_ws("-",regexp_replace(nvl(e.email_address,''), '"', ''), regexp_replace(nvl(p.privilege_name,''), '"', ''))));
    

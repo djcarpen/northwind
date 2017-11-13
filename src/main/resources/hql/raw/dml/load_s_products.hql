@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).s_products
+insert into table ${hivevar:targetDbName}.s_products
 select 
         upper(regexp_replace(product_name, '"', '')),
         current_timestamp load_dt,
@@ -20,5 +20,5 @@ select
         minimum_reorder_quantity,
         regexp_replace(category, '"', ''),
         regexp_replace(attachments, '"', '') 
-from $(hivevar:sourceDbName).stg_northwind_products
-where edl_ingest_time = $(hivevar:edlIngestTime);
+from ${hivevar:sourceDbName}.stg_northwind_products
+where edl_ingest_time = ${hivevar:edlIngestTime};

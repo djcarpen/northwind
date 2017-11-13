@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).s_orders
+insert into table ${hivevar:targetDbName}.s_orders
 SELECT
         upper(cast(id as string)) orders_key,
         current_timestamp load_dt,
@@ -24,5 +24,5 @@ SELECT
         trim(regexp_replace(payment_type,'"','')) payment_type,
         paid_date,
         trim(regexp_replace(notes,'"','')) notes
-        FROM $(hivevar:sourceDbName).stg_northwind_orders
-where edl_ingest_time = $(hivevar:edlIngestTime);
+        FROM ${hivevar:sourceDbName}.stg_northwind_orders
+where edl_ingest_time = ${hivevar:edlIngestTime};

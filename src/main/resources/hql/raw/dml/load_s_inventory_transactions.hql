@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).s_inventory_transactions
+insert into table ${hivevar:targetDbName}.s_inventory_transactions
 select 
         upper(cast(id as string)) inventory_transactions_key,
         current_timestamp load_dt,
@@ -14,6 +14,6 @@ select
         transaction_modified_date,
         quantity,
         trim(regexp_replace(comments,'"','')) comments
-from $(hivevar:sourceDbName).stg_northwind_inventory_transactions
-where edl_ingest_time = $(hivevar:edlIngestTime);
+from ${hivevar:sourceDbName}.stg_northwind_inventory_transactions
+where edl_ingest_time = ${hivevar:edlIngestTime};
  

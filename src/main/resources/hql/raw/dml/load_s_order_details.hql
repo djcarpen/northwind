@@ -1,4 +1,4 @@
-insert into table  $(hivevar:targetDbName).s_order_details 
+insert into table  ${hivevar:targetDbName}.s_order_details 
 select
         upper(cast(id as string)) order_details_key,
         current_timestamp load_dt,
@@ -14,5 +14,5 @@ select
         discount,
         status_id,
         date_allocated
-from $(hivevar:sourceDbName).stg_northwind_order_details
-where edl_ingest_time = $(hivevar:edlIngestTime);
+from ${hivevar:sourceDbName}.stg_northwind_order_details
+where edl_ingest_time = ${hivevar:edlIngestTime};

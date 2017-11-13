@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).s_customers
+insert into table ${hivevar:targetDbName}.s_customers
 select
         upper(concat_ws("-",regexp_replace(last_name, '"', ''), regexp_replace(first_name, '"', ''), regexp_replace(company, '"', ''))),
         current_timestamp load_dt,
@@ -25,5 +25,5 @@ select
         regexp_replace(web_page, '"', ''),
         regexp_replace(notes, '"', ''),
         regexp_replace(attachments, '"', '') 
-from $(hivevar:sourceDbName).stg_northwind_customers
-where edl_ingest_time = $(hivevar:edlIngestTime);
+from ${hivevar:sourceDbName}.stg_northwind_customers
+where edl_ingest_time = ${hivevar:edlIngestTime};
