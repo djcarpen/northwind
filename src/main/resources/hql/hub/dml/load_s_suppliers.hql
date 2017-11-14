@@ -1,13 +1,13 @@
-drop table if exists $(hivevar:targetDbName).temp_suppliers;
+drop table if exists ${hivevar:targetDbName}.temp_suppliers;
 
-create temporary table $(hivevar:targetDbName).temp_suppliers(suppliers_key STRING, load_dt TIMESTAMP, dtl__capxtimestamp TIMESTAMP,
+create temporary table ${hivevar:targetDbName}.temp_suppliers(suppliers_key STRING, load_dt TIMESTAMP, dtl__capxtimestamp TIMESTAMP,
 dtl__capxaction STRING, dtl__capxrowid INT, edl_ingest_channel STRING, edl_ingest_time STRING, edl_soft_delete BOOLEAN
 , edl_source_file STRING, last_name STRING, first_name STRING, email_address STRING, job_title STRING, business_phone
 STRING, home_phone STRING, mobile_phone STRING, fax_number STRING, address STRING, city STRING,
 state_province STRING, zip_postal_code STRING, country_region STRING, web_page STRING, notes STRING
 , attachments STRING);
 
-insert overwrite table $(hivevar:targetDbName).temp_suppliers
+insert overwrite table ${hivevar:targetDbName}.temp_suppliers
 select raw.suppliers_key,
     raw.load_dt,
     raw.dtl__capxtimestamp,
@@ -37,12 +37,12 @@ from( select *
       from( select rank() over(partition by suppliers_key order by load_dt desc) as rnk, *
             from $(hivevar:sourceDbName).s_suppliers) x
       where rnk = 1) raw
-left join $(hivevar:targetDbName).s_suppliers hub on raw.suppliers_key = hub.suppliers_key
+left join ${hivevar:targetDbName}.s_suppliers hub on raw.suppliers_key = hub.suppliers_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;
 
-delete from $(hivevar:targetDbName).s_suppliers where exists ( select 1 from $(hivevar:targetDbName).temp_suppliers temp where s_suppliers.suppliers_key = temp.suppliers_key);
+delete from ${hivevar:targetDbName}.s_suppliers where exists ( select 1 from ${hivevar:targetDbName}.temp_suppliers temp where s_suppliers.suppliers_key = temp.suppliers_key);
 
-insert into table $(hivevar:targetDbName).s_suppliers 
+insert into table ${hivevar:targetDbName}.s_suppliers 
 select
     suppliers_key,
     load_dt,
@@ -69,7 +69,7 @@ select
     web_page,
     notes,
     attachments
-from $(hivevar:targetDbName).temp_suppliers 
+from ${hivevar:targetDbName}.temp_suppliers 
 where edl_soft_delete = 0;
 
-drop table if exists $(hivevar:targetDbName).temp_suppliers;
+drop table if exists ${hivevar:targetDbName}.temp_suppliers;

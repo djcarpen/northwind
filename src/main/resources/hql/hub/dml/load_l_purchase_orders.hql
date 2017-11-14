@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).l_purchase_orders
+insert into table ${hivevar:targetDbName}.l_purchase_orders
 SELECT distinct               
     link_purchase_orders_key,
     purchase_orders_key,
@@ -9,5 +9,5 @@ SELECT distinct
     load_dt     
 FROM $(hivevar:sourceDbName).l_purchase_orders raw
 where not exists ( select 1 
-               from $(hivevar:targetDbName).l_purchase_orders hub
+               from ${hivevar:targetDbName}.l_purchase_orders hub
                where raw.link_purchase_orders_key = hub.link_purchase_orders_key);

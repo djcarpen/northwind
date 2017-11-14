@@ -1,4 +1,4 @@
-insert into table $(hivevar:targetDbName).h_products
+insert into table ${hivevar:targetDbName}.h_products
 select 
     products_key,
     product_id,
@@ -7,5 +7,5 @@ select
 from $(hivevar:sourceDbName).h_products raw
 where not exists
     ( select 1
-      from $(hivevar:targetDbName).h_products hub
+      from ${hivevar:targetDbName}.h_products hub
       where raw.products_key = hub.products_key) ;

@@ -1,12 +1,12 @@
-drop table if exists $(hivevar:targetDbName).temp_employees;
-create temporary table $(hivevar:targetDbName).temp_employees(employees_key STRING, load_dt TIMESTAMP, dtl__capxtimestamp TIMESTAMP,
+drop table if exists ${hivevar:targetDbName}.temp_employees;
+create temporary table ${hivevar:targetDbName}.temp_employees(employees_key STRING, load_dt TIMESTAMP, dtl__capxtimestamp TIMESTAMP,
 dtl__capxaction STRING, dtl__capxrowid INT, edl_ingest_channel STRING, edl_ingest_time STRING, edl_soft_delete BOOLEAN,
 edl_source_file STRING, company STRING, last_name STRING, first_name STRING, job_title STRING, business_phone STRING,
 home_phone STRING, mobile_phone STRING, fax_number STRING, address STRING, city STRING,
 state_province STRING, zip_postal_code STRING, country_region STRING, web_page STRING, notes STRING
 , attachments STRING) ;
 
-insert overwrite table $(hivevar:targetDbName).temp_employees
+insert overwrite table ${hivevar:targetDbName}.temp_employees
 select 
     raw.employees_key,
     raw.load_dt,
@@ -37,12 +37,12 @@ from( select *
       from( select rank() over(partition by employees_key order by dtl__capxtimestamp desc) as rnk, *
             from $(hivevar:sourceDbName).s_employees) x
       where rnk = 1) raw
-left join $(hivevar:targetDbName).s_employees hub on raw.employees_key = hub.employees_key
+left join ${hivevar:targetDbName}.s_employees hub on raw.employees_key = hub.employees_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;
 
-delete from $(hivevar:targetDbName).s_employees where exists ( select 1 from $(hivevar:targetDbName).temp_employees temp where s_employees.employees_key = temp.employees_key);
+delete from ${hivevar:targetDbName}.s_employees where exists ( select 1 from ${hivevar:targetDbName}.temp_employees temp where s_employees.employees_key = temp.employees_key);
 
-insert into table $(hivevar:targetDbName).s_employees 
+insert into table ${hivevar:targetDbName}.s_employees 
 select
     employees_key,
     load_dt,
@@ -69,7 +69,7 @@ select
     web_page,
     notes,
     attachments
-from $(hivevar:targetDbName).temp_employees 
+from ${hivevar:targetDbName}.temp_employees 
 where edl_soft_delete = 0;
 
-drop table if exists $(hivevar:targetDbName).temp_employees;
+drop table if exists ${hivevar:targetDbName}.temp_employees;

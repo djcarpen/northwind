@@ -1,13 +1,13 @@
-drop table if exists $(hivevar:targetDbName).temp_customers;
+drop table if exists ${hivevar:targetDbName}.temp_customers;
 
-create temporary table $(hivevar:targetDbName).temp_customers(customers_key STRING, load_dt TIMESTAMP, dtl__capxtimestamp TIMESTAMP,
+create temporary table ${hivevar:targetDbName}.temp_customers(customers_key STRING, load_dt TIMESTAMP, dtl__capxtimestamp TIMESTAMP,
 dtl__capxaction STRING, dtl__capxrowid INT, edl_ingest_channel STRING, edl_ingest_time STRING, edl_soft_delete BOOLEAN,
 edl_source_file STRING, last_name STRING, first_name STRING, email_address STRING, job_title STRING, business_phone
 STRING, home_phone STRING, mobile_phone STRING, fax_number STRING, address STRING, city STRING,
 state_province STRING, zip_postal_code STRING, country_region STRING, web_page STRING, notes STRING
 , attachments STRING);
 
-insert overwrite table $(hivevar:targetDbName).temp_customers
+insert overwrite table ${hivevar:targetDbName}.temp_customers
 select 
     raw.customers_key,
     raw.load_dt,
@@ -38,12 +38,12 @@ from( select *
       from( select rank() over(partition by customers_key order by dtl__capxtimestamp desc) as rnk, *
             from $(hivevar:sourceDbName).s_customers) x
       where rnk = 1) raw
-left join $(hivevar:targetDbName).s_customers hub on raw.customers_key = hub.customers_key
+left join ${hivevar:targetDbName}.s_customers hub on raw.customers_key = hub.customers_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;
 
-delete from $(hivevar:targetDbName).s_customers where exists ( select 1 from $(hivevar:targetDbName).temp_customers temp where s_customers.customers_key = temp.customers_key);
+delete from ${hivevar:targetDbName}.s_customers where exists ( select 1 from ${hivevar:targetDbName}.temp_customers temp where s_customers.customers_key = temp.customers_key);
 
-insert into table $(hivevar:targetDbName).s_customers 
+insert into table ${hivevar:targetDbName}.s_customers 
 select
     customers_key,
     load_dt,
@@ -70,7 +70,7 @@ select
     web_page,
     notes,
     attachments
-from $(hivevar:targetDbName).temp_customers 
+from ${hivevar:targetDbName}.temp_customers 
 where edl_soft_delete = 0;
 
-drop table if exists $(hivevar:targetDbName).temp_customers;
+drop table if exists ${hivevar:targetDbName}.temp_customers;
