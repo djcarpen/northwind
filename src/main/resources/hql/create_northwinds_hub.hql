@@ -1,4 +1,4 @@
-use justin_northwind_hub;
+use ${hivevar:targetDbName};
 
 drop table if exists h_customers;
 drop table if exists h_employees;

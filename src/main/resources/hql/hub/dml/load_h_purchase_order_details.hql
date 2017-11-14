@@ -3,7 +3,7 @@ select
     purchase_order_details_key,
     purchase_order_detail_id,
     load_dt
-from $(hivevar:sourceDbName).h_purchase_order_details raw
+from ${hivevar:sourceDbName}.h_purchase_order_details raw
 where not exists
     ( select 1
       from ${hivevar:targetDbName}.h_purchase_order_details hub

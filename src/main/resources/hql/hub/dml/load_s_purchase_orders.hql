@@ -30,7 +30,7 @@ select
     raw.approved_date
 from( select *
       from( select rank() over(partition by purchase_orders_key order by load_dt desc) as rnk, *
-            from $(hivevar:sourceDbName).s_purchase_orders) x
+            from ${hivevar:sourceDbName}.s_purchase_orders) x
       where rnk = 1) raw
 left join ${hivevar:targetDbName}.s_purchase_orders hub on raw.purchase_orders_key = hub.purchase_orders_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;

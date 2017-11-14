@@ -4,7 +4,7 @@ select
     privilege_id,
     privilege_name,
     load_dt
-from $(hivevar:sourceDbName).h_privileges raw
+from ${hivevar:sourceDbName}.h_privileges raw
 where not exists
     ( select 1
       from ${hivevar:targetDbName}.h_privileges hub

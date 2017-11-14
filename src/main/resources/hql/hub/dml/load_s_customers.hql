@@ -36,7 +36,7 @@ select
     raw.attachments
 from( select *
       from( select rank() over(partition by customers_key order by dtl__capxtimestamp desc) as rnk, *
-            from $(hivevar:sourceDbName).s_customers) x
+            from ${hivevar:sourceDbName}.s_customers) x
       where rnk = 1) raw
 left join ${hivevar:targetDbName}.s_customers hub on raw.customers_key = hub.customers_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;

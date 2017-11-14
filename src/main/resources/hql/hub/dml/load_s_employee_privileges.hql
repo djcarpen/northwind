@@ -16,7 +16,7 @@ select distinct
     raw.edl_source_file
 from( select *
       from( select rank() over(partition by employee_privileges_key order by load_dt desc) as rnk, *
-            from $(hivevar:sourceDbName).s_employee_privileges) x
+            from ${hivevar:sourceDbName}.s_employee_privileges) x
       where rnk = 1) raw
 left join ${hivevar:targetDbName}.s_employee_privileges hub on raw.employee_privileges_key = hub.employee_privileges_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;

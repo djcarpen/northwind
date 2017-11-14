@@ -23,7 +23,7 @@ select
     raw.comments
 from( select *
       from( select rank() over(partition by inventory_transactions_key order by dtl__capxtimestamp desc) as rnk, *
-            from $(hivevar:sourceDbName).s_inventory_transactions) x
+            from ${hivevar:sourceDbName}.s_inventory_transactions) x
       where rnk = 1) raw
 left join ${hivevar:targetDbName}.s_inventory_transactions hub on raw.inventory_transactions_key = hub.inventory_transactions_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;

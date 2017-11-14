@@ -5,7 +5,7 @@ SELECT distinct
     employees_key,
     privileges_key,
     load_dt
-FROM $(hivevar:sourceDbName).l_employee_privileges raw
+FROM ${hivevar:sourceDbName}.l_employee_privileges raw
 where not exists
     ( select 1
       from ${hivevar:targetDbName}.l_employee_privileges hub

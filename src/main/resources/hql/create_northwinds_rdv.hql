@@ -1,4 +1,5 @@
-use justin_northwind_raw;
+use use ${hivevar:targetDbName};
+
 drop table if exists h_customers;
 drop table if exists h_employees;
 drop table if exists h_inventory_transactions;
@@ -37,9 +38,7 @@ drop table if exists s_purchase_orders;
 drop table if exists s_purchase_order_details;
 drop table if exists s_shippers;
 drop table if exists s_suppliers;
-drop table if exists h_employee_privileges;
-drop table if exists s_employee_privileges;
-drop table if exists l_employee_privileges;
+
 
 CREATE TABLE H_customers (
   customers_key STRING,

@@ -35,7 +35,7 @@ select
     raw.attachments
 from( select *
       from( select rank() over(partition by employees_key order by dtl__capxtimestamp desc) as rnk, *
-            from $(hivevar:sourceDbName).s_employees) x
+            from ${hivevar:sourceDbName}.s_employees) x
       where rnk = 1) raw
 left join ${hivevar:targetDbName}.s_employees hub on raw.employees_key = hub.employees_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;

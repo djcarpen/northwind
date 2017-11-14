@@ -22,7 +22,7 @@ select
     raw.posted_to_inventory
 from( select *
       from( select rank() over(partition by purchase_order_details_key order by load_dt desc) as rnk, *
-            from $(hivevar:sourceDbName).s_purchase_order_details) x
+            from ${hivevar:sourceDbName}.s_purchase_order_details) x
       where rnk = 1) raw
 left join ${hivevar:targetDbName}.s_purchase_order_details hub on raw.purchase_order_details_key = hub.purchase_order_details_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;

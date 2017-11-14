@@ -4,7 +4,7 @@ select
     product_id,
     product_name,
     load_dt
-from $(hivevar:sourceDbName).h_products raw
+from ${hivevar:sourceDbName}.h_products raw
 where not exists
     ( select 1
       from ${hivevar:targetDbName}.h_products hub

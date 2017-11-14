@@ -36,7 +36,7 @@ select
     raw.attachments
 from( select *
       from( select rank() over(partition by shippers_key order by load_dt desc) as rnk, *
-            from $(hivevar:sourceDbName).s_shippers) x
+            from ${hivevar:sourceDbName}.s_shippers) x
       where rnk = 1) raw
 left join ${hivevar:targetDbName}.s_shippers hub on raw.shippers_key = hub.shippers_key
 where raw.load_dt > hub.load_dt or hub.load_dt is null;
