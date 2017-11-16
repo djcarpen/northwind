@@ -1,4 +1,4 @@
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-insert-employee-privileges-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="edl-northwind-loaddv-insert-employee-privileges-workflow">
 
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -37,7 +37,7 @@
     </fork>
 
     <action name="edl-northwind-loaddv-insert-h-employee-privileges" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -52,6 +52,8 @@
             <script>${codeBaseDir}/hql/${dataVaultType}/dml/load_h_employee_privileges.hql</script>
              <param>sourceDbName=${sourceDbName}</param>
              <param>targetDbName=${targetDbName}</param>
+            <param>edlIngestTime=${edlIngestTime}</param>
+            <param>edlIngestChannel=${edlIngestChannel}</param>
         </hive2>
         <ok to="edl-northwind-loaddv-employee-privileges-joining"/>
         <error to="kill-edl-northwind-loaddv-insert-h-employee-privileges"/>
@@ -62,7 +64,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-s-employee-privileges" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -89,7 +91,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-l-employee-privileges" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>

@@ -1,4 +1,4 @@
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-insert-purchase-orders-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="edl-northwind-loaddv-insert-purchase-orders-workflow">
 
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -33,10 +33,11 @@
     <fork name="edl-northwind-loaddv-purchase-orders-forking">
         <path start="edl-northwind-loaddv-insert-h-purchase-orders"/>
         <path start="edl-northwind-loaddv-insert-s-purchase-orders"/>
+        <path start="edl-northwind-loaddv-insert-l-purchase-orders"/>
     </fork>
 
     <action name="edl-northwind-loaddv-insert-h-purchase-orders" cred="hs2_credentials">
-     <hive2 xmlns="uri:oozie:hive2-action:0.1">
+     <hive2 xmlns="uri:oozie:hive2-action:0.2">
      		<configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -63,7 +64,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-s-purchase-orders" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -90,7 +91,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-l-purchase-orders" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>

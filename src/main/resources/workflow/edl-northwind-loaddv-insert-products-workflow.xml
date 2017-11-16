@@ -1,4 +1,4 @@
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-insert-products-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="edl-northwind-loaddv-insert-products-workflow">
 
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -36,7 +36,7 @@
     </fork>
 
     <action name="edl-northwind-loaddv-insert-h-products" cred="hs2_credentials">
-     <hive2 xmlns="uri:oozie:hive2-action:0.1">
+     <hive2 xmlns="uri:oozie:hive2-action:0.2">
      		<configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -63,7 +63,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-s-products" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>

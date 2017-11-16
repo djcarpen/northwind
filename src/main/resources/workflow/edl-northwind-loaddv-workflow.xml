@@ -1,4 +1,4 @@
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="edl-northwind-loaddv-workflow">
 
 	<credentials>
 		<credential name="hs2_credentials" type="hive2">

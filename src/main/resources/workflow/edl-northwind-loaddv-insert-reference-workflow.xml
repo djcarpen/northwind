@@ -1,4 +1,4 @@
-<workflow-app xmlns="uri:oozie:workflow:0.4" name="edl-northwind-loaddv-insert-reference-workflow">
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="edl-northwind-loaddv-insert-reference-workflow">
 
     <global>
         <job-tracker>${jobTracker}</job-tracker>
@@ -34,14 +34,14 @@
         <path start="edl-northwind-loaddv-insert-r-inventory-transaction-types"/>
         <path start="edl-northwind-loaddv-insert-r-order-details-status"/>
         <path start="edl-northwind-loaddv-insert-r-orders-status"/>
-        <path start="edl-northwind-loaddv-insert-r-orders-tax-status"/>
-        <path start="edl-northwind-loaddv-insert-r-purchase-order-status"/>
-        <path start="edl-northwind-loaddv-insert-r-sales-reports"/>
-        <path start="edl-northwind-loaddv-insert-r-strings"/>
+         <path start="edl-northwind-loaddv-insert-r-orders-tax-status"/>
+         <path start="edl-northwind-loaddv-insert-r-purchase-order-status"/>
+         <path start="edl-northwind-loaddv-insert-r-sales-reports"/>
+         <path start="edl-northwind-loaddv-insert-r-strings"/>
     </fork>
 
     <action name="edl-northwind-loaddv-insert-r-inventory-transaction-types" cred="hs2_credentials">
-     <hive2 xmlns="uri:oozie:hive2-action:0.1">
+     <hive2 xmlns="uri:oozie:hive2-action:0.2">
      		<configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -68,7 +68,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-r-order-details-status" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -95,7 +95,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-r-orders-tax-status" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -122,7 +122,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-r-orders-status" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -149,7 +149,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-r-purchase-order-status" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -176,7 +176,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-r-sales-reports" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
@@ -203,7 +203,7 @@
     </kill>
 
     <action name="edl-northwind-loaddv-insert-r-strings" cred="hs2_credentials">
-        <hive2 xmlns="uri:oozie:hive2-action:0.1">
+        <hive2 xmlns="uri:oozie:hive2-action:0.2">
             <configuration>
                 <property>
                     <name>hive.query.name</name>
