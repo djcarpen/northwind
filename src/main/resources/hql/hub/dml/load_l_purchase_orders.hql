@@ -8,6 +8,4 @@ SELECT distinct
     submitted_by_employees_key,
     load_dt     
 FROM ${hivevar:sourceDbName}.l_purchase_orders raw
-where not exists ( select 1 
-               from ${hivevar:targetDbName}.l_purchase_orders hub
-               where raw.link_purchase_orders_key = hub.link_purchase_orders_key);
+where not exists ( select 1 from ${hivevar:targetDbName}.l_purchase_orders hub where raw.link_purchase_orders_key = hub.link_purchase_orders_key);

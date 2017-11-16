@@ -8,6 +8,4 @@ SELECT distinct
     inventory_transactions_key,
     load_dt              
 from ${hivevar:sourceDbName}.l_order_details raw
-where not exists ( select 1 
-               from ${hivevar:targetDbName}.l_order_details hub
-               where raw.link_order_details_key = hub.link_order_details_key);
+where not exists ( select 1 from ${hivevar:targetDbName}.l_order_details hub where raw.link_order_details_key = hub.link_order_details_key);

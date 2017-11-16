@@ -5,6 +5,4 @@ SELECT distinct
     orders_key,
     load_dt  
 FROM ${hivevar:sourceDbName}.l_invoices raw
-where not exists ( select 1 
-               from ${hivevar:targetDbName}.l_invoices hub
-               where raw.link_invoices_key = hub.link_invoices_key);
+where not exists ( select 1  from ${hivevar:targetDbName}.l_invoices hub where raw.link_invoices_key = hub.link_invoices_key);
