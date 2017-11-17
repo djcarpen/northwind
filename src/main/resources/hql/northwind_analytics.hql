@@ -131,4 +131,70 @@ join h_products hp on hp.products_key = lpod.products_key
 group by hs.company, hp.product_name
 order by company, product_name;
 
+----------------------------------- 
 
+insert overwrite table ${hivevar:targetDbName}.sales_trend_by_month
+select year(order_date) `year`, month(order_date) `month`, sum(unit_price) amount
+from ${hivevar:sourceDbName}.s_order_details sod
+join ${hivevar:sourceDbName}.l_order_details lod on sod.order_details_key = lod.order_details_key
+join ${hivevar:sourceDbName}.s_orders so on lod.orders_key = so.orders_key and cast(substr(order_date,0,4) as int) = 2006 and cast(substr(order_date,6,2) as int) between 1 and 6 
+group by year(order_date), month(order_date);
+
+insert overwrite table ${hivevar:targetDbName}.employee_performance_by_month
+select concat_ws(' ',se.first_name, se.last_name) employee_name, se.job_title, sum(unit_price) amount
+from ${hivevar:sourceDbName}.s_order_details sod
+join ${hivevar:sourceDbName}.l_order_details lod on sod.order_details_key = lod.order_details_key
+join ${hivevar:sourceDbName}.s_orders so on lod.orders_key = so.orders_key and cast(substr(order_date,0,4) as int) = 2006 and cast(substr(order_date,6,2) as int) between 1 and 6 
+join ${hivevar:sourceDbName}.l_orders lo on so.orders_key = lo.orders_key
+join ${hivevar:sourceDbName}.s_employees se on lo.employees_key = se.employees_key
+group by se.first_name, se.last_name, se.job_title;
+
+
+insert overwrite table ${hivevar:targetDbName}.sales_by_geography
+select ship_state_province `state`, count(distinct lo.customers_key) `customer count`, sum(quantity) quantity, sum(unit_price) amount
+from ${hivevar:sourceDbName}.s_order_details sod
+join ${hivevar:sourceDbName}.l_order_details lod on sod.order_details_key = lod.order_details_key
+join ${hivevar:sourceDbName}.s_orders so on lod.orders_key = so.orders_key and so.order_date is not null
+join ${hivevar:sourceDbName}.l_orders lo on so.orders_key = lo.orders_key
+group by ship_state_province;
+
+
+insert overwrite table ${hivevar:targetDbName}.sales_by_customer
+select hc.company, product_name, count(so.orders_key) order_count, sum(sod.quantity) quantity, sum(sod.unit_price) amount
+from ${hivevar:sourceDbName}.s_order_details sod
+join ${hivevar:sourceDbName}.l_order_details lod on sod.order_details_key = lod.order_details_key
+join ${hivevar:sourceDbName}.s_orders so on lod.orders_key = so.orders_key and so.order_date is not null
+join ${hivevar:sourceDbName}.l_orders lo on so.orders_key = lo.orders_key
+join ${hivevar:sourceDbName}.h_customers hc on lo.customers_key = hc.customers_key
+join ${hivevar:sourceDbName}.h_products hp on lod.products_key = hp.products_key
+group by hc.company, product_name;
+
+
+insert overwrite table ${hivevar:targetDbName}.sales_by_product
+select product_name, count(so.orders_key) order_count, sum(sod.quantity) quantity, sum(sod.unit_price) amount
+from ${hivevar:sourceDbName}.s_order_details sod
+join ${hivevar:sourceDbName}.l_order_details lod on sod.order_details_key = lod.order_details_key
+join ${hivevar:sourceDbName}.s_orders so on lod.orders_key = so.orders_key and so.order_date is not null
+join ${hivevar:sourceDbName}.l_orders lo on so.orders_key = lo.orders_key
+join ${hivevar:sourceDbName}.h_products hp on lod.products_key = hp.products_key
+group by product_name;
+
+insert overwrite table ${hivevar:targetDbName}.shipper_performance
+select company, sum(delivery_count) delivery_count, sum(not_delivered) not_delivered, avg(shipping_fee) avg_freight_cost
+from (
+        select hs.company, case when shipped_date is not null then 1 else 0 end as delivery_count, case when shipped_date is null then 1 else 0 end as not_delivered, so.shipping_fee
+        from ${hivevar:sourceDbName}.s_orders so 
+        join ${hivevar:sourceDbName}.l_orders lo on so.orders_key = lo.orders_key
+        join ${hivevar:sourceDbName}.h_shippers hs on lo.shippers_key = hs.shippers_key) x
+group by company;
+
+
+insert overwrite table ${hivevar:targetDbName}.supplier_performance
+select hs.company, hp.product_name, sum(spod.quantity) as item_count
+from ${hivevar:sourceDbName}.s_purchase_orders spo
+join ${hivevar:sourceDbName}.l_purchase_order_details lpod on lpod.purchase_orders_key = spo.purchase_orders_key
+join ${hivevar:sourceDbName}.s_purchase_order_details spod on lpod.purchase_order_details_key = spod.purchase_order_details_key
+join ${hivevar:sourceDbName}.l_purchase_orders lpo on spo.purchase_orders_key = lpo.purchase_orders_key
+join ${hivevar:sourceDbName}.h_suppliers hs on lpo.suppliers_key = hs.suppliers_key
+join ${hivevar:sourceDbName}.h_products hp on hp.products_key = lpod.products_key
+group by hs.company, hp.product_name;
